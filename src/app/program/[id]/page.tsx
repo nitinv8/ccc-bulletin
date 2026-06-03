@@ -4,10 +4,27 @@ import Link from "next/link";
 import { useBookmarks } from "@/components/BookmarkProvider";
 import bulletinData from "@/data/bulletins.json";
 
+interface Program {
+  id: string;
+  title: string;
+  type: string;
+  category: string;
+  campus: string;
+  grades: string;
+  audience: string;
+  overview: string;
+  date?: string;
+  deadline?: string;
+  venue?: string;
+  time?: string;
+  mode: string;
+  tags: string[];
+}
+
 export default function ProgramPage() {
   const params = useParams();
   const id = params.id as string;
-  const allPrograms = bulletinData.bulletins.flatMap((b) => b.programs);
+  const allPrograms = bulletinData.bulletins.flatMap((b) => b.programs) as Program[];
   const program = allPrograms.find((p) => p.id === id);
   const { isBookmarked, toggleBookmark } = useBookmarks();
 

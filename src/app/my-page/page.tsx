@@ -4,9 +4,26 @@ import ProgramCard from "@/components/ProgramCard";
 import bulletinData from "@/data/bulletins.json";
 import Link from "next/link";
 
+interface Program {
+  id: string;
+  title: string;
+  type: string;
+  category: string;
+  campus: string;
+  grades: string;
+  audience: string;
+  overview: string;
+  date?: string;
+  deadline?: string;
+  venue?: string;
+  time?: string;
+  mode: string;
+  tags: string[];
+}
+
 export default function MyPage() {
   const { bookmarks } = useBookmarks();
-  const programs = bulletinData.bulletins.flatMap((b) => b.programs);
+  const programs = bulletinData.bulletins.flatMap((b) => b.programs) as Program[];
   const saved = programs.filter((p) => bookmarks.includes(p.id));
 
   return (
