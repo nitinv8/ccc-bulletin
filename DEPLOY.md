@@ -1,15 +1,48 @@
-# Deploy CCC Bulletin to Vercel
+# CCC Bulletin — Setup & Workflow
 
-Open a terminal and run these commands:
+## First-time setup
 
 ```bash
-cd "C:\Users\nitin\AppData\Roaming\Claude\local-agent-mode-sessions\dc8b288c-c112-4c4b-9f7a-75af3ab7caf0\6b816c31-134a-4a91-9c79-2cce97d310f3\local_67f63832-abc0-4ae3-bfdd-3ba1dec9c4cd\outputs\ccc-bulletin"
-
+cd ccc-bulletin
 npm install
-
-npx vercel --yes
+npm install puppeteer    # for the parser script
 ```
 
-This will install dependencies, then deploy to Vercel. If prompted to log in, follow the instructions in the terminal.
+## Adding a new bulletin
 
-After deployment, Vercel will give you a live URL.
+### Option A: Automated (with Anthropic API key)
+
+```bash
+ANTHROPIC_API_KEY=sk-ant-... npm run parse https://heyzine.com/flip-book/XXXX.html jun-2026
+git add -A && git commit -m "Add June 2026 bulletin" && git push
+```
+
+Vercel auto-deploys on push.
+
+### Option B: Semi-automated
+
+```bash
+# 1. Extract raw text
+npm run parse https://heyzine.com/flip-book/XXXX.html jun-2026
+
+# 2. Open scripts/raw-text/jun-2026.txt
+# 3. Paste into Claude with the template in scripts/TEMPLATE.md
+# 4. Copy the JSON output into src/data/bulletins.json
+# 5. Push to deploy
+git add -A && git commit -m "Add June 2026 bulletin" && git push
+```
+
+### Option C: Via Cowork
+
+Just paste the heyzine link in Cowork and say "Add this new bulletin to the CCC website" — Claude will handle the rest.
+
+## Local development
+
+```bash
+npm run dev    # http://localhost:3000
+```
+
+## Deploy
+
+Connected to Vercel via GitHub — auto-deploys on push to main.
+Live URL: https://ccc-bulletin-vert.vercel.app

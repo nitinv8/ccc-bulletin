@@ -5,7 +5,8 @@ import FilterBar from "@/components/FilterBar";
 import bulletinData from "@/data/bulletins.json";
 
 export default function Home() {
-  const bulletin = bulletinData.bulletins[0];
+  const [bulletinIndex, setBulletinIndex] = useState(0);
+  const bulletin = bulletinData.bulletins[bulletinIndex];
   const programs = bulletin.programs;
 
   const [selectedType, setSelectedType] = useState("");
@@ -69,6 +70,19 @@ export default function Home() {
           <span className="px-2.5 py-0.5 rounded-full bg-yellow-100 text-yellow-800 text-xs font-medium">
             {programs.length} programs
           </span>
+          {bulletinData.bulletins.length > 1 && (
+            <select
+              value={bulletinIndex}
+              onChange={(e) => setBulletinIndex(Number(e.target.value))}
+              className="ml-auto px-3 py-1 rounded-lg border border-gray-200 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
+            >
+              {bulletinData.bulletins.map((b, i) => (
+                <option key={b.id} value={i}>
+                  {b.month}
+                </option>
+              ))}
+            </select>
+          )}
         </div>
         <p className="text-sm text-gray-500">{bulletin.title}</p>
       </div>

@@ -7,8 +7,8 @@ import bulletinData from "@/data/bulletins.json";
 export default function ProgramPage() {
   const params = useParams();
   const id = params.id as string;
-  const bulletin = bulletinData.bulletins[0];
-  const program = bulletin.programs.find((p) => p.id === id);
+  const allPrograms = bulletinData.bulletins.flatMap((b) => b.programs);
+  const program = allPrograms.find((p) => p.id === id);
   const { isBookmarked, toggleBookmark } = useBookmarks();
 
   if (!program) {

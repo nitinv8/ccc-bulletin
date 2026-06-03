@@ -6,7 +6,7 @@ import Link from "next/link";
 
 export default function MyPage() {
   const { bookmarks } = useBookmarks();
-  const programs = bulletinData.bulletins[0].programs;
+  const programs = bulletinData.bulletins.flatMap((b) => b.programs);
   const saved = programs.filter((p) => bookmarks.includes(p.id));
 
   return (

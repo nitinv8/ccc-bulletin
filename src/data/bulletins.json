@@ -1,6 +1,643 @@
 {
   "bulletins": [
     {
+      "id": "jun-2026",
+      "title": "Career Counselling Centre Weekly Bulletin",
+      "month": "JUNE 2026",
+      "source": "https://heyzine.com/flip-book/6b3d355e62.html",
+      "contact": "aarti.bhatia@tsrs.org",
+      "school": "The Shri Ram School, Aravali & Moulsari",
+      "programs": [
+        {
+          "id": "ucas-workshop-jun",
+          "title": "UCAS Personal Statement Workshop",
+          "type": "In-Person Session",
+          "category": "university-visits",
+          "campus": "SAR & ML",
+          "grades": "11-12",
+          "audience": "Students & Parents of Grades 11 & 12",
+          "overview": "All about UCAS personal statement, admissions, scholarships, and student life in the UK.",
+          "date": "Monday, 3rd August 2026",
+          "time": "2:15 pm to 3:15 pm",
+          "venue": "School Auditorium at Aravali Campus",
+          "mode": "In-Person",
+          "tags": [
+            "UK",
+            "UCAS",
+            "Admissions"
+          ]
+        },
+        {
+          "id": "college-unfiltered-jun",
+          "title": "Alumni Podcast – College Unfiltered",
+          "type": "Podcast",
+          "category": "university-visits",
+          "campus": "SAR & ML",
+          "grades": "9-12",
+          "audience": "Students & Parents of Grades 9 to 12",
+          "overview": "The alumni podcast featured on the school YouTube channel in the CCC playlist. Conversations packed with valuable takeaways including insights from alumni at Brown University, King's College, and University of Warwick.",
+          "mode": "Online",
+          "tags": [
+            "Podcast",
+            "Alumni",
+            "College Life"
+          ]
+        },
+        {
+          "id": "logic-olympiad",
+          "title": "International Logic Olympiad",
+          "type": "Competition",
+          "category": "future-ready",
+          "campus": "SAR & ML",
+          "grades": "8-11",
+          "audience": "Students & Parents of Grades 8 to 11",
+          "overview": "The world's leading logic & critical thinking competition. No syllabus. No memorisation. Developed by alumni of IIT-Delhi, Princeton & Harvard.",
+          "date": "Qualifiers: Jan 24th, 2027; Finals: Jan 31st, 2027",
+          "mode": "Online",
+          "tags": [
+            "Logic",
+            "Critical Thinking",
+            "Olympiad"
+          ]
+        },
+        {
+          "id": "vexors-puzzles",
+          "title": "Vexors Puzzles",
+          "type": "Competition",
+          "category": "future-ready",
+          "campus": "SAR & ML",
+          "grades": "8-11",
+          "audience": "Students & Parents of Grades 8 to 11",
+          "overview": "A Vexor is a logic puzzle that promotes deductive reasoning in children. Continuous and self-paced puzzle solving.",
+          "mode": "Online",
+          "tags": [
+            "Logic",
+            "Puzzles",
+            "Reasoning"
+          ]
+        },
+        {
+          "id": "offers-to-visas-jun",
+          "title": "From Offers to Visas",
+          "type": "Virtual Session",
+          "category": "future-ready",
+          "campus": "SAR & ML",
+          "grades": "11-12",
+          "audience": "Students of Grades 11 to 12",
+          "overview": "Cialfo is offering professional visa counselling services including end-to-end document review, timeline management and deadline tracking, interview preparation, and personalised guidance to minimise delays or rejections.",
+          "mode": "Online",
+          "tags": [
+            "Visa",
+            "Study Abroad",
+            "Counselling"
+          ]
+        },
+        {
+          "id": "huso-2026",
+          "title": "Harvard Undergraduate Science Olympiad (HUSO) 2026-27",
+          "type": "Competition",
+          "category": "future-ready",
+          "campus": "SAR & ML",
+          "grades": "7-10",
+          "audience": "Students of Grades 7 to 10",
+          "overview": "An undergraduate-run organisation at Harvard University dedicated to providing accessible STEM education through its annual Science Olympiad invitationals at Harvard.",
+          "mode": "Online/In-Person",
+          "tags": [
+            "Harvard",
+            "Science",
+            "STEM",
+            "Olympiad"
+          ]
+        },
+        {
+          "id": "careers-in-sports",
+          "title": "Careers in Sports",
+          "type": "Information",
+          "category": "future-ready",
+          "campus": "SAR & ML",
+          "grades": "9-12",
+          "audience": "Students of Grades 9 to 12",
+          "overview": "All about careers in sports. Explore various career paths and opportunities in the sports industry.",
+          "mode": "Online",
+          "tags": [
+            "Sports",
+            "Careers",
+            "Exploration"
+          ]
+        },
+        {
+          "id": "aranyaarth-sustainability",
+          "title": "Sustainability Project Building – Aranyaarth Foundation Mentorship Program",
+          "type": "Summer Program",
+          "category": "future-ready",
+          "campus": "SAR & ML",
+          "grades": "9-12",
+          "audience": "Students of Grades 9 to 12",
+          "overview": "Build your own UN SDG-aligned impact project while mastering design thinking and entrepreneurship. Earn a personalised LOR and UNESCO-affiliated certification.",
+          "mode": "Online",
+          "tags": [
+            "Sustainability",
+            "SDG",
+            "Mentorship",
+            "Entrepreneurship"
+          ]
+        },
+        {
+          "id": "indian-debating-league",
+          "title": "Indian Debating League 2026",
+          "type": "Competition",
+          "category": "future-ready",
+          "campus": "SAR & ML",
+          "grades": "6-12",
+          "audience": "Students of Grades 6 to 12",
+          "overview": "Curated to help schools align early with key BP, WSDC, and global speech tournaments. Enables informed tournament selection and structured preparation support.",
+          "mode": "Online/In-Person",
+          "tags": [
+            "Debate",
+            "Public Speaking",
+            "Competition"
+          ]
+        },
+        {
+          "id": "tribesforgood-jun",
+          "title": "TribesforGOOD 2026 Summer Programs",
+          "type": "Summer Program",
+          "category": "future-ready",
+          "campus": "SAR & ML",
+          "grades": "9-12",
+          "audience": "Students of Grades 9 to 12",
+          "overview": "Two programs: 4-WEEK Global Challenge & Social Justice, and 6-WEEK Social Entrepreneurship & Design Thinking.",
+          "mode": "Online",
+          "tags": [
+            "Social Justice",
+            "Entrepreneurship",
+            "Design Thinking"
+          ]
+        },
+        {
+          "id": "ntu-genai-bootcamp",
+          "title": "NTU Singapore – GenAI Bootcamp Summer School",
+          "type": "Summer Program",
+          "category": "future-ready",
+          "campus": "SAR & ML",
+          "grades": "11-12",
+          "audience": "Students of Grades 11 & 12 (Min 16 yrs)",
+          "overview": "A 5-day programme at NTU Singapore introducing participants to Generative AI, including foundations, AI co-pilots and assistants, and agentic AI concepts.",
+          "date": "August 3–7, 2026",
+          "deadline": "Registration: 29 June 2026; Payment: 3 July 2026",
+          "mode": "In-Person",
+          "tags": [
+            "AI",
+            "GenAI",
+            "Singapore",
+            "NTU"
+          ]
+        },
+        {
+          "id": "science-without-borders",
+          "title": "Science Without Borders® Challenge 2026 – Semi-Finalists",
+          "type": "Competition",
+          "category": "future-ready",
+          "campus": "SAR & ML",
+          "grades": "9-12",
+          "audience": "Students of Grades 9 to 12",
+          "overview": "The 2026 Science Without Borders Challenge highlighted the creativity and scientific curiosity of students worldwide. This year's theme: Microscopic Marine Life.",
+          "mode": "Online",
+          "tags": [
+            "Science",
+            "Marine Biology",
+            "Art",
+            "International"
+          ]
+        },
+        {
+          "id": "bocconi-summer-jun",
+          "title": "Bocconi Summer School 2026: An Italian Summer",
+          "type": "Summer Program",
+          "category": "future-ready",
+          "campus": "SAR & ML",
+          "grades": "9-12",
+          "audience": "Students of Grades 9 to 12",
+          "overview": "The unique opportunity to participate in two exciting laboratories and join an international community of students from all over the world.",
+          "date": "July 6 to July 17, 2026",
+          "mode": "In-Person",
+          "tags": [
+            "Italy",
+            "Bocconi",
+            "University",
+            "Summer"
+          ]
+        },
+        {
+          "id": "ai-internship-aiya",
+          "title": "AI Internship for Young Achievers (AIYA)",
+          "type": "Internship",
+          "category": "future-ready",
+          "campus": "SAR & ML",
+          "grades": "9-11",
+          "audience": "Students of Grades 9 to 11",
+          "overview": "A 10-day on-campus program at NTU that blends AI education with hands-on experience, focusing on core AI principles combining theory and practical application.",
+          "mode": "In-Person",
+          "tags": [
+            "AI",
+            "Internship",
+            "NTU",
+            "Singapore"
+          ]
+        },
+        {
+          "id": "gaip-business",
+          "title": "GAIP Business & Entrepreneurship (Hybrid)",
+          "type": "Internship",
+          "category": "future-ready",
+          "campus": "SAR & ML",
+          "grades": "8-12",
+          "audience": "Students of Grades 8 to 12",
+          "overview": "A 4-week online + 10-day on-campus program designed to build entrepreneurial mindsets, develop business plans, and pitch original ideas.",
+          "mode": "Online/In-Person",
+          "tags": [
+            "Business",
+            "Entrepreneurship",
+            "Internship"
+          ]
+        },
+        {
+          "id": "supros-career-exploration",
+          "title": "Career Exploration Matters (SUPROS Internship)",
+          "type": "Internship",
+          "category": "future-ready",
+          "campus": "SAR & ML",
+          "grades": "9-12",
+          "audience": "Students of Grades 9 to 12",
+          "overview": "Explore summer internships and research projects across various fields.",
+          "mode": "Online/In-Person",
+          "tags": [
+            "Internship",
+            "Research",
+            "Career Exploration"
+          ]
+        },
+        {
+          "id": "aerospace-isro-internship",
+          "title": "Aerospace Engineer Internship Under an Ex-ISRO Mentor",
+          "type": "Internship",
+          "category": "future-ready",
+          "campus": "SAR & ML",
+          "grades": "9-12",
+          "audience": "Students of Grades 9 to 12",
+          "overview": "Students will design a model satellite to orbit moons and conduct observations, gaining hands-on insight into real-world aerospace engineering challenges.",
+          "mode": "In-Person",
+          "tags": [
+            "Aerospace",
+            "ISRO",
+            "Satellite",
+            "Engineering"
+          ]
+        },
+        {
+          "id": "public-policy-girls",
+          "title": "Public Policy Case Competition for High School Girls",
+          "type": "Competition",
+          "category": "future-ready",
+          "campus": "SAR & ML",
+          "grades": "9-12",
+          "audience": "Students of Grades 9 to 12",
+          "overview": "A case study-based policy-making competition for high school girls around the world. Three rounds leading to results on 15th August 2026.",
+          "deadline": "Round 1: June 15th, 2026",
+          "mode": "Online",
+          "tags": [
+            "Public Policy",
+            "Girls",
+            "Competition"
+          ]
+        },
+        {
+          "id": "atlas-summer-school",
+          "title": "ATLAS Summer School 2026 – Design, Business & Tech",
+          "type": "Summer Program",
+          "category": "future-ready",
+          "campus": "SAR & ML",
+          "grades": "9-12",
+          "audience": "Students of Grades 9 to 12",
+          "overview": "An immersive summer experience helping students explore future career pathways through hands-on learning, expert mentorship, and exposure to industry-relevant skills.",
+          "date": "23 June – 03 July 2026",
+          "mode": "In-Person",
+          "tags": [
+            "Design",
+            "Business",
+            "Tech",
+            "Summer"
+          ]
+        },
+        {
+          "id": "tiger-stripes-rit",
+          "title": "Tiger STRIPES – Rochester Institute of Technology",
+          "type": "Internship",
+          "category": "future-ready",
+          "campus": "SAR & ML",
+          "grades": "9-11",
+          "audience": "Students of Grades 9 to 11",
+          "overview": "Engage in skill-building programs, internships, and competitions to earn badges, redeem merchandise, build a skill-based résumé, and gain familiarity with RIT.",
+          "mode": "Online",
+          "tags": [
+            "RIT",
+            "Skills",
+            "Internship",
+            "Competition"
+          ]
+        },
+        {
+          "id": "music-production-summer",
+          "title": "Summer Program 2026 – Music Production & Creation",
+          "type": "Summer Program",
+          "category": "future-ready",
+          "campus": "SAR & ML",
+          "grades": "9-12",
+          "audience": "Students of Grades 9 to 12",
+          "overview": "Focus on music production and creation in a professional studio environment. Songwriting, recording, mixing, and collaborative projects. Limited to 20 students per batch.",
+          "mode": "In-Person",
+          "tags": [
+            "Music",
+            "Production",
+            "Creative",
+            "Studio"
+          ]
+        },
+        {
+          "id": "buildup-internships",
+          "title": "Build-up Internships 2026 Batch",
+          "type": "Internship",
+          "category": "future-ready",
+          "campus": "SAR & ML",
+          "grades": "9-12",
+          "audience": "Students of Grades 9 to 12",
+          "overview": "Real-world, custom-sourced projects with top companies. Direct industry engagement through MOUs & company mentors. Interest-based matching with dual certification.",
+          "date": "Fixed Start Dates: May / June / July 2026",
+          "mode": "Online/In-Person",
+          "tags": [
+            "Internship",
+            "Industry",
+            "Career Readiness"
+          ]
+        },
+        {
+          "id": "geniushub-summer",
+          "title": "GeniusHub Summer Cohort 2026",
+          "type": "Summer Program",
+          "category": "future-ready",
+          "campus": "SAR & ML",
+          "grades": "8-12",
+          "audience": "Students of Grades 8 to 12",
+          "overview": "Build a strong portfolio with real-world projects. Gain hands-on experience through guided mentorship and showcase practical skills beyond academics.",
+          "mode": "Online",
+          "tags": [
+            "Portfolio",
+            "Mentorship",
+            "Projects"
+          ]
+        },
+        {
+          "id": "buildup-summer-june",
+          "title": "BuildUp Summer 2026 – June Cohort Updates",
+          "type": "Internship",
+          "category": "future-ready",
+          "campus": "SAR & ML",
+          "grades": "11-12",
+          "audience": "Students of Grades 11 & 12",
+          "overview": "50+ projects across industries including AI, healthcare, climate-tech, consulting, finance, sustainability, growth strategy, engineering, public policy, and more.",
+          "mode": "Online/In-Person",
+          "tags": [
+            "Internship",
+            "Multi-Industry",
+            "Projects"
+          ]
+        },
+        {
+          "id": "climate-change-challenge",
+          "title": "Climate Change Challenge 2026",
+          "type": "Competition",
+          "category": "future-ready",
+          "campus": "SAR & ML",
+          "grades": "10-12",
+          "audience": "Students of Grades 10 to 12",
+          "overview": "Teams of 3–5 students develop innovative solutions to real-world climate challenges. With 1,600+ entries from 75 countries in 2025. Finalist teams present at the University of Oxford — fully sponsored.",
+          "deadline": "30 June 2026",
+          "mode": "Online/In-Person",
+          "tags": [
+            "Climate",
+            "Oxford",
+            "Innovation",
+            "Global"
+          ]
+        },
+        {
+          "id": "oxford-summer-schools",
+          "title": "University of Oxford – Summer School Programmes",
+          "type": "Summer Program",
+          "category": "future-ready",
+          "campus": "SAR & ML",
+          "grades": "11-12",
+          "audience": "Students of Grades 11 & 12 only",
+          "overview": "Three programmes: 1) AI and Machine Learning Pioneers, 2) Future Climate Innovators, 3) Future Entrepreneurs — all at Said Business School, University of Oxford.",
+          "date": "19th July to 1st August, 2026",
+          "deadline": "Rolling Enrolment",
+          "venue": "University of Oxford, United Kingdom",
+          "mode": "In-Person",
+          "tags": [
+            "Oxford",
+            "AI",
+            "Climate",
+            "Entrepreneurship"
+          ]
+        },
+        {
+          "id": "one-young-india",
+          "title": "Understanding the World You Navigate – One Young India",
+          "type": "Workshop",
+          "category": "future-ready",
+          "campus": "SAR & ML",
+          "grades": "9-12",
+          "audience": "Students of Grades 9 to 12",
+          "overview": "Two cohorts: 1) Model NITI Aayog — debate, draft policy and understand India's development framework. 2) Entrepreneurship in Action — move from idea to execution.",
+          "date": "9th June to 12th June, 2026",
+          "time": "4 PM to 8 PM",
+          "mode": "Online",
+          "tags": [
+            "Policy",
+            "Entrepreneurship",
+            "Governance"
+          ]
+        },
+        {
+          "id": "gaip-nus-business",
+          "title": "Global Academic Internship Programme – NUS Business & Entrepreneurship",
+          "type": "Internship",
+          "category": "future-ready",
+          "campus": "SAR & ML",
+          "grades": "8-12",
+          "audience": "Students of Grades 8 to 12",
+          "overview": "A 10-day NUS on-campus programme fostering entrepreneurial skills through business plan creation and idea pitching.",
+          "mode": "In-Person",
+          "tags": [
+            "NUS",
+            "Singapore",
+            "Business",
+            "Internship"
+          ]
+        },
+        {
+          "id": "aviation-internship",
+          "title": "International Aviation Internship for Teens",
+          "type": "Internship",
+          "category": "future-ready",
+          "campus": "SAR & ML",
+          "grades": "8-12",
+          "audience": "Students of Grades 8 to 12",
+          "overview": "A 3-day online aviation internship. Interactive, career-focused program with research tasks, a certificate, and a chance to win a model aircraft.",
+          "mode": "Online",
+          "tags": [
+            "Aviation",
+            "Internship",
+            "Careers"
+          ]
+        },
+        {
+          "id": "ashoka-horizons",
+          "title": "Ashoka Horizons Achievers Programme",
+          "type": "Workshop",
+          "category": "future-ready",
+          "campus": "SAR & ML",
+          "grades": "9-12",
+          "audience": "Students of Grades 9 to 12",
+          "overview": "Certified micro-courses offering 21st-century skills, global faculty mentorship, peer collaboration, and capstone projects — designed to make students future-ready.",
+          "mode": "Online",
+          "tags": [
+            "Ashoka",
+            "Skills",
+            "Certification"
+          ]
+        },
+        {
+          "id": "futurowise-courses",
+          "title": "World Beyond Textbooks – Future Readiness Courses (Futurowise)",
+          "type": "Workshop",
+          "category": "future-ready",
+          "campus": "SAR & ML",
+          "grades": "11-12",
+          "audience": "Students of Grades 11 & 12 only",
+          "overview": "Top skills to explore: Cryptocurrency & Blockchain, Physical AI & Industrial Bots, Explorations in Design, Ocean and Space Exploration, Astronomy & Astrophysics, Carbon Credit Trading, and more.",
+          "mode": "Online",
+          "tags": [
+            "Future Skills",
+            "Tech",
+            "Blockchain",
+            "AI"
+          ]
+        },
+        {
+          "id": "masters-union-workshops",
+          "title": "NextGen Labs: Learning Workshops by Masters' Union",
+          "type": "Workshop",
+          "category": "future-ready",
+          "campus": "SAR & ML",
+          "grades": "9-12",
+          "audience": "Students of Grades 9 to 12",
+          "overview": "Hands-on workshops in startups, app design, branding, stock investing, and AI — delivered by industry experts from the Masters' Union.",
+          "mode": "In-Person",
+          "tags": [
+            "Startups",
+            "AI",
+            "Branding",
+            "Investing"
+          ]
+        },
+        {
+          "id": "masters-union-bootcamp",
+          "title": "Summer Bootcamp by Masters' Union: Next-Gen Skills & Startup Weeks",
+          "type": "Summer Program",
+          "category": "future-ready",
+          "campus": "SAR & ML",
+          "grades": "8-12",
+          "audience": "Students of Grades 8 to 12",
+          "overview": "A skill development bootcamp where students learn future-ready skills like content creation, app building, and stock market fundamentals, and compete in Corporate MUN simulations.",
+          "date": "24th–28th June, 2026",
+          "mode": "In-Person",
+          "tags": [
+            "Bootcamp",
+            "Skills",
+            "Startups",
+            "MUN"
+          ]
+        },
+        {
+          "id": "iit-coaching-cuet-jee-neet",
+          "title": "IIT & MoE – Free Coaching for CUET, JEE, NEET",
+          "type": "Information",
+          "category": "future-ready",
+          "campus": "SAR & ML",
+          "grades": "11-12",
+          "audience": "Students of Grades 11 & 12",
+          "overview": "Free coaching initiative by IIT covering entrance exams: JEE, NEET-UG, CUET-UG, and ICAR. Register online through the SATHEE platform.",
+          "mode": "Online",
+          "tags": [
+            "JEE",
+            "NEET",
+            "CUET",
+            "Free Coaching"
+          ]
+        },
+        {
+          "id": "penn-step",
+          "title": "Penn STEP (Student Tutoring Empowerment Program)",
+          "type": "Workshop",
+          "category": "future-ready",
+          "campus": "SAR & ML",
+          "grades": "6-12",
+          "audience": "Students of Grades 6 to 12",
+          "overview": "Supercharge your high school GPA, earn a certificate from Thinkist, experience transformational leadership development, and excel in math and self-awareness skills.",
+          "mode": "Online",
+          "tags": [
+            "Penn",
+            "Tutoring",
+            "Math",
+            "Leadership"
+          ]
+        },
+        {
+          "id": "australia-connect",
+          "title": "Australia Connect Program",
+          "type": "Information",
+          "category": "future-ready",
+          "campus": "SAR & ML",
+          "grades": "12-12",
+          "audience": "Students of Grade 12 Only",
+          "overview": "For students aspiring to study in a bachelor's program and work in Australia. Free registration.",
+          "mode": "Online",
+          "tags": [
+            "Australia",
+            "Study Abroad",
+            "Bachelor's"
+          ]
+        },
+        {
+          "id": "johns-hopkins-workshops",
+          "title": "Johns Hopkins University – Online Workshops",
+          "type": "Workshop",
+          "category": "future-ready",
+          "campus": "SAR & ML",
+          "grades": "9-11",
+          "audience": "Students of Grades 9 to 11",
+          "overview": "Virtual workshops offered by Johns Hopkins University. Register for upcoming workshops and more.",
+          "mode": "Online",
+          "tags": [
+            "Johns Hopkins",
+            "University",
+            "Workshop"
+          ]
+        }
+      ]
+    },
+    {
       "id": "may-2026",
       "title": "Career Counselling Centre Weekly Bulletin",
       "month": "MAY 2026",
@@ -21,7 +658,11 @@
           "time": "2:15 pm to 3:15 pm",
           "venue": "School Auditorium at Aravali Campus",
           "mode": "In-Person",
-          "tags": ["UK", "UCAS", "Admissions"]
+          "tags": [
+            "UK",
+            "UCAS",
+            "Admissions"
+          ]
         },
         {
           "id": "college-unfiltered",
@@ -33,7 +674,11 @@
           "audience": "Students & Parents of Grades 9 to 12",
           "overview": "The alumni podcast featured on the school YouTube channel in the CCC playlist. Conversations packed with valuable takeaways to help you prepare for your own college journey. Watch alumni from Brown University, King's College, and University of Warwick share their insights.",
           "mode": "Online",
-          "tags": ["Podcast", "Alumni", "College Life"]
+          "tags": [
+            "Podcast",
+            "Alumni",
+            "College Life"
+          ]
         },
         {
           "id": "cemex-problem-solving",
@@ -47,7 +692,11 @@
           "date": "June 29 – August 14, 2026",
           "deadline": "May 29, 2026",
           "mode": "Online",
-          "tags": ["Math", "Problem Solving", "Summer"]
+          "tags": [
+            "Math",
+            "Problem Solving",
+            "Summer"
+          ]
         },
         {
           "id": "offers-to-visas",
@@ -59,7 +708,11 @@
           "audience": "Students of Grades 11 to 12",
           "overview": "Craflo is offering professional visa counselling services including end-to-end document review, timeline management and deadline tracking, interview preparation (where required), and personalised guidance to minimise delays or rejections.",
           "mode": "Online",
-          "tags": ["Visa", "Study Abroad", "Counselling"]
+          "tags": [
+            "Visa",
+            "Study Abroad",
+            "Counselling"
+          ]
         },
         {
           "id": "harvard-science-olympiad",
@@ -71,7 +724,12 @@
           "audience": "Students of Grades 7 to 12",
           "overview": "HUSO is an undergraduate-run organization at Harvard University, dedicated to providing accessible STEM opportunities for high school students. Through its annual Science Olympiad Invitationals at Harvard, HUSO identifies and nurtures young scientific talent from around the world.",
           "mode": "Online/In-Person",
-          "tags": ["Science", "Harvard", "Olympiad", "STEM"]
+          "tags": [
+            "Science",
+            "Harvard",
+            "Olympiad",
+            "STEM"
+          ]
         },
         {
           "id": "careers-in-sports",
@@ -83,7 +741,10 @@
           "audience": "Students of Grades 9 to 12",
           "overview": "Explore pathways and opportunities in the sports industry — from sports management to athletic training and beyond.",
           "mode": "Online",
-          "tags": ["Sports", "Career Exploration"]
+          "tags": [
+            "Sports",
+            "Career Exploration"
+          ]
         },
         {
           "id": "sustainability-mentorship",
@@ -95,7 +756,12 @@
           "audience": "Students of Grades 9 to 12",
           "overview": "Build your own UN SDG-aligned impact project while mastering design thinking and entrepreneurship. Earn a personalised LOR and UNESCO-affiliated certification. Get direct guidance from sustainability professionals. Build a standout portfolio with international credentials.",
           "mode": "Online",
-          "tags": ["Sustainability", "SDG", "Design Thinking", "LOR"]
+          "tags": [
+            "Sustainability",
+            "SDG",
+            "Design Thinking",
+            "LOR"
+          ]
         },
         {
           "id": "data-science-iit-madras",
@@ -109,7 +775,12 @@
           "date": "June 2026",
           "deadline": "31st May 2026",
           "mode": "Online",
-          "tags": ["Data Science", "ML", "IIT", "Tech"]
+          "tags": [
+            "Data Science",
+            "ML",
+            "IIT",
+            "Tech"
+          ]
         },
         {
           "id": "indian-debating-league",
@@ -121,7 +792,11 @@
           "audience": "Students in Grades 6 to 12",
           "overview": "Curated to help schools align early with key BP, WSDC, and global speech tournaments. The calendar enables informed tournament selection and structured preparation support for strong outcomes.",
           "mode": "In-Person/Online",
-          "tags": ["Debate", "Public Speaking", "Competition"]
+          "tags": [
+            "Debate",
+            "Public Speaking",
+            "Competition"
+          ]
         },
         {
           "id": "misti-summer-residency",
@@ -135,7 +810,12 @@
           "date": "19–25 May 2026 / 17–23 June 2026",
           "venue": "Kuala Lumpur, Malaysia",
           "mode": "In-Person",
-          "tags": ["MIT", "Tech", "International", "Malaysia"]
+          "tags": [
+            "MIT",
+            "Tech",
+            "International",
+            "Malaysia"
+          ]
         },
         {
           "id": "tribesforGood-2026",
@@ -149,7 +829,11 @@
           "date": "22nd May – 27th May 2026",
           "deadline": "10th May 2026",
           "mode": "Online",
-          "tags": ["Social Justice", "Entrepreneurship", "Design Thinking"]
+          "tags": [
+            "Social Justice",
+            "Entrepreneurship",
+            "Design Thinking"
+          ]
         },
         {
           "id": "flame-design",
@@ -161,7 +845,11 @@
           "audience": "Students of Grades 9 to 12",
           "overview": "A design immersion program by FLAME University combining creative thinking with hands-on design practice.",
           "mode": "In-Person",
-          "tags": ["Design", "University", "Creative"]
+          "tags": [
+            "Design",
+            "University",
+            "Creative"
+          ]
         },
         {
           "id": "astronomy-astrophysics",
@@ -173,7 +861,11 @@
           "audience": "Students in Grades 9 to 12",
           "overview": "For students curious about astronomy and science. Participate in a global competition testing your knowledge of the cosmos.",
           "mode": "Online",
-          "tags": ["Astronomy", "Science", "Competition"]
+          "tags": [
+            "Astronomy",
+            "Science",
+            "Competition"
+          ]
         },
         {
           "id": "bblc-life-lab",
@@ -186,7 +878,12 @@
           "overview": "A prestigious platform for students to turn ideas into real-world scientific experiments. Gain access to global laboratories, present at scientific summits, and master authentic research practices. Builds leadership and collaboration skills with national recognition.",
           "deadline": "May 20, 2026",
           "mode": "In-Person",
-          "tags": ["Science", "Research", "Lab", "Leadership"]
+          "tags": [
+            "Science",
+            "Research",
+            "Lab",
+            "Leadership"
+          ]
         },
         {
           "id": "ntu-genai-bootcamp",
@@ -198,7 +895,12 @@
           "audience": "Students of Grades 11 & 12 (Min 16yrs)",
           "overview": "A 5-day programme introducing key areas of Generative AI, including foundations, AI co-pilots and assistants, and agentic AI concepts. Gain an overview of how these tools are applied across different contexts.",
           "mode": "In-Person",
-          "tags": ["AI", "GenAI", "Singapore", "Tech"]
+          "tags": [
+            "AI",
+            "GenAI",
+            "Singapore",
+            "Tech"
+          ]
         },
         {
           "id": "science-without-borders",
@@ -210,7 +912,12 @@
           "audience": "Ages 11-14",
           "overview": "This year's theme: Microscopic Marine Life — inviting young artists to explore tiny organisms that form the foundation of ocean ecosystems. Highlighting creativity and scientific curiosity.",
           "mode": "Online",
-          "tags": ["Science", "Art", "Marine Biology", "Competition"]
+          "tags": [
+            "Science",
+            "Art",
+            "Marine Biology",
+            "Competition"
+          ]
         },
         {
           "id": "bocconi-summer",
@@ -223,7 +930,12 @@
           "overview": "Participate in two exciting laboratories and join an international community of students from all over the world at one of Europe's top business schools.",
           "date": "July 6 – July 17, 2026",
           "mode": "In-Person",
-          "tags": ["Business", "Italy", "International", "University"]
+          "tags": [
+            "Business",
+            "Italy",
+            "International",
+            "University"
+          ]
         },
         {
           "id": "lalit-summer-school",
@@ -235,7 +947,11 @@
           "audience": "Students in Grades 9 to 12",
           "overview": "Mixology workshop, culinary demonstration by professional chefs, bakery & pastry masterclass, farm-to-plate experiential learning, and educational visit to The Lalit Mangar.",
           "mode": "In-Person",
-          "tags": ["Hospitality", "Culinary", "Experiential Learning"]
+          "tags": [
+            "Hospitality",
+            "Culinary",
+            "Experiential Learning"
+          ]
         },
         {
           "id": "oxford-sustainability",
@@ -248,7 +964,11 @@
           "overview": "A sustainability-focused summit combining academic learning with practical problem-solving, in association with Oxford.",
           "date": "August 2026",
           "mode": "In-Person",
-          "tags": ["Sustainability", "Oxford", "Summit"]
+          "tags": [
+            "Sustainability",
+            "Oxford",
+            "Summit"
+          ]
         },
         {
           "id": "climate-change-challenge",
@@ -261,7 +981,11 @@
           "overview": "Develop innovative solutions to real-world climate challenges.",
           "deadline": "30 June 2026",
           "mode": "Online",
-          "tags": ["Climate", "Innovation", "Teamwork"]
+          "tags": [
+            "Climate",
+            "Innovation",
+            "Teamwork"
+          ]
         },
         {
           "id": "idl-debate",
@@ -274,7 +998,11 @@
           "overview": "This year's theme: The Shield & The Circuit — exploring the balance between protective institutions and cutting-edge innovations shaping 21st-century governance.",
           "deadline": "June 15th",
           "mode": "Online & Offline",
-          "tags": ["Debate", "Speech", "Governance"]
+          "tags": [
+            "Debate",
+            "Speech",
+            "Governance"
+          ]
         },
         {
           "id": "atlas-summer",
@@ -287,7 +1015,12 @@
           "overview": "Immersive summer experience helping students explore future career pathways through hands-on learning, expert mentorship, and exposure to industry-relevant skills.",
           "date": "Multiple batches: May–July 2026",
           "mode": "In-Person",
-          "tags": ["Design", "Business", "Tech", "Career"]
+          "tags": [
+            "Design",
+            "Business",
+            "Tech",
+            "Career"
+          ]
         },
         {
           "id": "tiger-stripes",
@@ -299,7 +1032,12 @@
           "audience": "Students of Grades 9 to 11",
           "overview": "Engage in skill-building programs, internships, and competitions to earn badges, build a skill-based resume, and gain familiarity with Rochester Institute of Technology (RIT).",
           "mode": "Online",
-          "tags": ["Internship", "RIT", "Skills", "Resume"]
+          "tags": [
+            "Internship",
+            "RIT",
+            "Skills",
+            "Resume"
+          ]
         },
         {
           "id": "ecotourism",
@@ -312,7 +1050,11 @@
           "overview": "Applied learning and guided field exposure to ecotourism, sustainability, conservation, and community-based tourism.",
           "date": "Fall 2026",
           "mode": "In-Person",
-          "tags": ["Ecotourism", "Sustainability", "Conservation"]
+          "tags": [
+            "Ecotourism",
+            "Sustainability",
+            "Conservation"
+          ]
         },
         {
           "id": "music-production",
@@ -324,7 +1066,11 @@
           "audience": "Students of Grades 9 to 12",
           "overview": "Focus on music production and creation in a professional studio environment. Songwriting, recording, mixing, and collaborative projects. Limited to 20 students per batch.",
           "mode": "In-Person",
-          "tags": ["Music", "Production", "Creative Arts"]
+          "tags": [
+            "Music",
+            "Production",
+            "Creative Arts"
+          ]
         },
         {
           "id": "buildup-internships",
@@ -337,7 +1083,12 @@
           "overview": "Real-world, custom-sourced projects with top companies. Direct industry engagement through MOUs & company mentors. Interest-based matching, end-to-end mentorship, and dual certification.",
           "date": "May / June / July 2026",
           "mode": "Online/In-Person",
-          "tags": ["Internship", "Industry", "Portfolio", "Certification"]
+          "tags": [
+            "Internship",
+            "Industry",
+            "Portfolio",
+            "Certification"
+          ]
         },
         {
           "id": "geniushub-summer",
@@ -349,7 +1100,11 @@
           "audience": "Students of Grades 8 to 12",
           "overview": "Build a strong portfolio with real-world projects. Gain hands-on experience through guided mentorship. Showcase practical skills beyond academics.",
           "mode": "Online",
-          "tags": ["Portfolio", "Mentorship", "Projects"]
+          "tags": [
+            "Portfolio",
+            "Mentorship",
+            "Projects"
+          ]
         },
         {
           "id": "nextgen-masters-union",
@@ -361,7 +1116,12 @@
           "audience": "Students of Grades 9 to 12",
           "overview": "Hands-on workshops in startups, app design, branding, stock investing, and AI — delivered by industry experts from Masters' Union.",
           "mode": "In-Person",
-          "tags": ["Startups", "AI", "Branding", "Workshops"]
+          "tags": [
+            "Startups",
+            "AI",
+            "Branding",
+            "Workshops"
+          ]
         },
         {
           "id": "masters-union-bootcamp",
@@ -374,7 +1134,12 @@
           "overview": "Learn future-ready skills like content creation, app building, stock market fundamentals, and compete in Corporate MUN simulations.",
           "date": "3rd–7th June / 24th–28th June 2026",
           "mode": "In-Person",
-          "tags": ["Skills", "MUN", "Startup", "Tech"]
+          "tags": [
+            "Skills",
+            "MUN",
+            "Startup",
+            "Tech"
+          ]
         },
         {
           "id": "iit-moe-coaching",
@@ -386,7 +1151,13 @@
           "audience": "Students of Grades 11 & 12",
           "overview": "Free entrance exam coaching covering JEE, NEET-UG, CUET-UG, and ICAR. Register online through the SATHEE portal.",
           "mode": "Online",
-          "tags": ["JEE", "NEET", "CUET", "Free", "Entrance Exams"]
+          "tags": [
+            "JEE",
+            "NEET",
+            "CUET",
+            "Free",
+            "Entrance Exams"
+          ]
         },
         {
           "id": "penn-step",
@@ -398,7 +1169,12 @@
           "audience": "Students of Grades 6 to 12",
           "overview": "Supercharge your high school GPA. Earn a certificate from Thinklist. Experience transformational leadership development. Excel in math and gain self-awareness skills.",
           "mode": "Online",
-          "tags": ["Tutoring", "Leadership", "Math", "Penn"]
+          "tags": [
+            "Tutoring",
+            "Leadership",
+            "Math",
+            "Penn"
+          ]
         },
         {
           "id": "australia-connect",
@@ -410,7 +1186,11 @@
           "audience": "Grade 12 Only",
           "overview": "For students aspiring to study in a bachelor's program and work in Australia.",
           "mode": "Online",
-          "tags": ["Australia", "Study Abroad", "Grade 12"]
+          "tags": [
+            "Australia",
+            "Study Abroad",
+            "Grade 12"
+          ]
         },
         {
           "id": "johns-hopkins-workshops",
@@ -422,7 +1202,11 @@
           "audience": "Students of Grades 9 to 11",
           "overview": "Virtual workshops by Johns Hopkins University exploring academic opportunities and building skills.",
           "mode": "Online",
-          "tags": ["Johns Hopkins", "University", "Workshop"]
+          "tags": [
+            "Johns Hopkins",
+            "University",
+            "Workshop"
+          ]
         }
       ]
     }
