@@ -23,7 +23,7 @@ interface Program {
 
 export default function MyPage() {
   const { bookmarks } = useBookmarks();
-  const programs = bulletinData.bulletins.flatMap((b) => b.programs) as Program[];
+  const programs = (bulletinData.bulletins as { programs: Program[] }[]).flatMap((b) => b.programs);
   const saved = programs.filter((p) => bookmarks.includes(p.id));
 
   return (
