@@ -79,15 +79,36 @@ export default function ProgramPage() {
               </span>
             )}
           </div>
-          <button
-            onClick={() => toggleBookmark(program.id)}
-            className={`text-2xl transition-transform hover:scale-110 shrink-0 ${
-              bookmarked ? "text-yellow-500" : "text-gray-300 hover:text-gray-400"
-            }`}
-            title={bookmarked ? "Remove star" : "Star this"}
-          >
-            {bookmarked ? "★" : "☆"}
-          </button>
+          <div className="flex items-center gap-2 shrink-0">
+            {/* Archive button */}
+            <div className="relative group">
+              <button
+                onClick={() => (archived ? unarchive(program.id) : archive(program.id))}
+                className={`text-xl transition-transform hover:scale-110 ${
+                  archived ? "text-blue-400" : "text-gray-300 hover:text-gray-400"
+                }`}
+              >
+                🗄
+              </button>
+              <span className="absolute -bottom-7 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-[11px] px-2 py-1 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+                {archived ? "Unarchive" : "Archive"}
+              </span>
+            </div>
+            {/* Star button */}
+            <div className="relative group">
+              <button
+                onClick={() => toggleBookmark(program.id)}
+                className={`text-2xl transition-transform hover:scale-110 ${
+                  bookmarked ? "text-yellow-500" : "text-gray-300 hover:text-gray-400"
+                }`}
+              >
+                {bookmarked ? "★" : "☆"}
+              </button>
+              <span className="absolute -bottom-7 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-[11px] px-2 py-1 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+                {bookmarked ? "Remove star" : "Star this"}
+              </span>
+            </div>
+          </div>
         </div>
 
         <h1 className="text-2xl font-bold text-gray-900 mb-1">{program.title}</h1>
@@ -184,12 +205,6 @@ export default function ProgramPage() {
               </span>
             )}
           </div>
-          <button
-            onClick={() => (archived ? unarchive(program.id) : archive(program.id))}
-            className="ml-auto px-4 py-2.5 rounded-lg border border-gray-200 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-          >
-            {archived ? "Unarchive" : "Archive"}
-          </button>
         </div>
 
         {/* Tags */}

@@ -69,32 +69,40 @@ export default function ProgramCard({
     >
       {/* Archive + Star buttons */}
       <div className="absolute top-4 right-4 flex items-center gap-2">
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            archived ? unarchive(program.id) : archive(program.id);
-          }}
-          className={`text-lg transition-transform hover:scale-110 ${
-            archived ? "text-blue-400" : "text-gray-400 group-hover:text-gray-500"
-          }`}
-          title={archived ? "Unarchive" : "Archive"}
-        >
-          🗄
-        </button>
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            toggleBookmark(program.id);
-          }}
-          className={`text-xl transition-transform hover:scale-110 ${
-            bookmarked ? "text-yellow-500" : "text-gray-300 group-hover:text-gray-400"
-          }`}
-          title={bookmarked ? "Remove star" : "Star this"}
-        >
-          {bookmarked ? "★" : "☆"}
-        </button>
+        <div className="relative group/archive">
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              archived ? unarchive(program.id) : archive(program.id);
+            }}
+            className={`text-lg transition-transform hover:scale-110 ${
+              archived ? "text-blue-400" : "text-gray-400 group-hover:text-gray-500"
+            }`}
+          >
+            🗄
+          </button>
+          <span className="absolute -bottom-7 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-[10px] px-2 py-1 rounded whitespace-nowrap opacity-0 group-hover/archive:opacity-100 transition-opacity pointer-events-none z-10">
+            {archived ? "Unarchive" : "Archive"}
+          </span>
+        </div>
+        <div className="relative group/star">
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              toggleBookmark(program.id);
+            }}
+            className={`text-xl transition-transform hover:scale-110 ${
+              bookmarked ? "text-yellow-500" : "text-gray-300 group-hover:text-gray-400"
+            }`}
+          >
+            {bookmarked ? "★" : "☆"}
+          </button>
+          <span className="absolute -bottom-7 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-[10px] px-2 py-1 rounded whitespace-nowrap opacity-0 group-hover/star:opacity-100 transition-opacity pointer-events-none z-10">
+            {bookmarked ? "Remove star" : "Star this"}
+          </span>
+        </div>
       </div>
 
       {/* Badges */}
