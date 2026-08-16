@@ -134,7 +134,7 @@ export default function Home() {
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {filtered.map((p) => (
-              <ProgramCard key={p.id} program={p} />
+              <ProgramCard key={p.id} program={p} clickableCard={true} />
             ))}
           </div>
           {filtered.length === 0 && (
@@ -156,7 +156,7 @@ export default function Home() {
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {catPrograms.map((p) => (
-                  <ProgramCard key={p.id} program={p} />
+                  <ProgramCard key={p.id} program={p} clickableCard={true} />
                 ))}
               </div>
             </section>

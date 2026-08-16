@@ -67,8 +67,21 @@ export default function ProgramCard({
         expired ? "border-gray-200 opacity-70" : "border-gray-200"
       } ${clickableCard ? "cursor-pointer hover:shadow-md" : "hover:shadow-md"}`}
     >
-      {/* Star button */}
+      {/* Archive + Star buttons */}
       <div className="absolute top-4 right-4 flex items-center gap-2">
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            archived ? unarchive(program.id) : archive(program.id);
+          }}
+          className={`text-lg transition-transform hover:scale-110 ${
+            archived ? "text-blue-400" : "text-gray-400 group-hover:text-gray-500"
+          }`}
+          title={archived ? "Unarchive" : "Archive"}
+        >
+          🗄
+        </button>
         <button
           onClick={(e) => {
             e.preventDefault();
@@ -183,19 +196,6 @@ export default function ProgramCard({
             </span>
           )}
         </button>
-        {showArchiveAction && (
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              archived ? unarchive(program.id) : archive(program.id);
-            }}
-            className="ml-auto px-2.5 py-1.5 rounded-lg border border-gray-200 text-xs text-gray-600 hover:bg-gray-50 transition-colors"
-            title={archived ? "Move back to My Page" : "Archive"}
-          >
-            {archived ? "Unarchive" : "Archive"}
-          </button>
-        )}
       </div>
 
       {/* Tags */}

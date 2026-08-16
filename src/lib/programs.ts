@@ -135,39 +135,8 @@ export function openCalendar(program: Program) {
 
   if (dateStr) {
     const dt = dateStr.replace(/-/g, "");
-    // Try Google Calendar link - works on all platforms
     const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${dt}/${dt}&details=${details}&location=${location}`;
-    
-    // Also generate .ics for native calendar apps
-    const uid = `${program.id}@ccc-bulletin`;
-    const ics = [
-      "BEGIN:VCALENDAR",
-      "VERSION:2.0",
-      "PRODID:-//CCC Bulletin//The Shri Ram School//EN",
-      "BEGIN:VEVENT",
-      `UID:${uid}`,
-      `DTSTAMP:${todayISO().replace(/-/g, "")}T000000Z`,
-      `DTSTART;VALUE=DATE:${dt}`,
-      `DTEND;VALUE=DATE:${dt}`,
-      `SUMMARY:${program.title}`,
-      `DESCRIPTION:${program.overview || ""}`,
-      program.venue ? `LOCATION:${program.venue}` : program.location ? `LOCATION:${program.location}` : "",
-      hasRealRegistrationLink(program) ? `URL:${program.registrationLink}` : "",
-      "END:VEVENT",
-      "END:VCALENDAR",
-    ]
-      .filter(Boolean)
-      .join("\r\n");
-
-    const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${program.id}.ics`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    window.open(gcalUrl, "_blank");
   } else {
     // No date — open Google Calendar blank
     const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}`;

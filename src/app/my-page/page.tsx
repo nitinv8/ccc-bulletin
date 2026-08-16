@@ -5,11 +5,11 @@ import ProgramCard from "@/components/ProgramCard";
 import { getAllPrograms } from "@/lib/programs";
 import Link from "next/link";
 
-type Tab = "starred" | "archive";
+type Tab = "mypage" | "starred" | "archive";
 
 export default function MyPage() {
   const { starred, archived } = useInteractions();
-  const [tab, setTab] = useState<Tab>("starred");
+  const [tab, setTab] = useState<Tab>("mypage");
 
   const allPrograms = useMemo(() => getAllPrograms(), []);
 
@@ -17,13 +17,14 @@ export default function MyPage() {
   const archivedPrograms = allPrograms.filter((p) => archived.includes(p.id));
 
   const tabs: { key: Tab; label: string; count: number; icon: string }[] = [
+    { key: "mypage", label: "My Page", count: starredPrograms.length + archivedPrograms.length, icon: "🏠" },
     { key: "starred", label: "Starred", count: starredPrograms.length, icon: "★" },
     { key: "archive", label: "Archived", count: archivedPrograms.length, icon: "🗄" },
   ];
 
   const list = tab === "starred" ? starredPrograms : archivedPrograms;
 
-  const emptyState = {
+  const emptyState: Record<"starred" | "archive", { icon: string; title: string; body: string }> = {
     starred: {
       icon: "☆",
       title: "No starred opportunities yet",
@@ -34,7 +35,7 @@ export default function MyPage() {
       title: "Archive is empty",
       body: "Tap Archive on any card to move it here once you've read it.",
     },
-  }[tab];
+  };
 
   return (
     <div>
@@ -68,34 +69,95 @@ export default function MyPage() {
         ))}
       </div>
 
-      {list.length === 0 ? (
-        <div className="text-center py-16 bg-white rounded-xl border border-gray-200">
-          <p className="text-4xl mb-3">{emptyState.icon}</p>
-          <p className="text-gray-500 text-lg mb-2">{emptyState.title}</p>
-          <p className="text-gray-400 text-sm mb-4">{emptyState.body}</p>
-          <Link
-            href="/"
-            className="inline-block px-4 py-2 bg-yellow-400 text-yellow-900 rounded-lg text-sm font-medium hover:bg-yellow-500 transition-colors"
-          >
-            Browse Programs
-          </Link>
+      {tab === "mypage" ? (
+        <div>
+          {starredPrograms.length === 0 && archivedPrograms.length === 0 ? (
+            <div className="text-center py-16 bg-white rounded-xl border border-gray-200">
+              <p className="text-4xl mb-3">🏠</p>
+              <p className="text-gray-500 text-lg mb-2">You haven&apos;t saved anything yet</p>
+              <p className="text-gray-400 text-sm mb-4">
+                Browse programs and star the ones you&apos;re interested in.
+              </p>
+              <Link
+                href="/"
+                className="inline-block px-4 py-2 bg-yellow-400 text-yellow-900 rounded-lg text-sm font-medium hover:bg-yellow-500 transition-colors"
+              >
+                Browse Programs
+              </Link>
+            </div>
+          ) : (
+            <div>
+              {/* Stat cards */}
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-5">
+                  <p className="text-3xl font-bold text-yellow-700 mb-1">{starredPrograms.length}</p>
+                  <p className="text-sm font-medium text-yellow-600">Starred</p>
+                </div>
+                <div className="bg-gray-50 border border-gray-200 rounded-xl p-5">
+                  <p className="text-3xl font-bold text-gray-600 mb-1">{archivedPrograms.length}</p>
+                  <p className="text-sm font-medium text-gray-500">Archived</p>
+                </div>
+              </div>
+
+              {/* Preview of starred programs */}
+              {starredPrograms.length > 0 && (
+                <div>
+                  <h3 className="text-sm font-semibold text-gray-700 mb-3">Starred</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {starredPrograms.slice(0, 4).map((p) => (
+                      <ProgramCard
+                        key={p.id}
+                        program={p}
+                        showArchiveAction={true}
+                        clickableCard={true}
+                      />
+                    ))}
+                  </div>
+                  {starredPrograms.length > 4 && (
+                    <button
+                      onClick={() => setTab("starred")}
+                      className="mt-4 text-sm text-yellow-700 font-medium hover:underline"
+                    >
+                      View all starred →
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
         </div>
       ) : (
-        <div>
-          <p className="text-sm text-gray-500 mb-4">
-            {list.length} opportunit{list.length !== 1 ? "ies" : "y"}
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {list.map((p) => (
-              <ProgramCard
-                key={p.id}
-                program={p}
-                showArchiveAction={true}
-                clickableCard={true}
-              />
-            ))}
-          </div>
-        </div>
+        <>
+          {list.length === 0 ? (
+            <div className="text-center py-16 bg-white rounded-xl border border-gray-200">
+              <p className="text-4xl mb-3">{emptyState[tab as "starred" | "archive"].icon}</p>
+              <p className="text-gray-500 text-lg mb-2">{emptyState[tab as "starred" | "archive"].title}</p>
+              <p className="text-gray-400 text-sm mb-4">{emptyState[tab as "starred" | "archive"].body}</p>
+              <Link
+                href="/"
+                className="inline-block px-4 py-2 bg-yellow-400 text-yellow-900 rounded-lg text-sm font-medium hover:bg-yellow-500 transition-colors"
+              >
+                Browse Programs
+              </Link>
+            </div>
+          ) : (
+            <div>
+              <p className="text-sm text-gray-500 mb-4">
+                {list.length} opportunit{list.length !== 1 ? "ies" : "y"}
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {list.map((p) => (
+                  <ProgramCard
+                    key={p.id}
+                    program={p}
+                    showArchiveAction={true}
+                    clickableCard={true}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
