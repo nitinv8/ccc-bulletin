@@ -25,7 +25,14 @@
             "UK",
             "UCAS",
             "Admissions"
-          ]
+          ],
+          "organisation": "UCAS (Universities and Colleges Admissions Service, UK)",
+          "location": "Gurugram, India (School Campus)",
+          "eligibility": "Students & Parents of Grades 11 & 12",
+          "registrationLink": "https://www.google.com/search?q=UCAS%20Personal%20Statement%20Workshop",
+          "registrationLinkVerified": false,
+          "deadlineDate": "2026-08-03",
+          "dateISO": "2026-08-03"
         },
         {
           "id": "college-unfiltered-jun",
@@ -41,7 +48,14 @@
             "Podcast",
             "Alumni",
             "College Life"
-          ]
+          ],
+          "organisation": "The Shri Ram School CCC (Alumni Podcast)",
+          "location": "Online / Global",
+          "eligibility": "Students & Parents of Grades 9 to 12",
+          "registrationLink": "https://www.google.com/search?q=Alumni%20Podcast%20%E2%80%93%20College%20Unfiltered",
+          "registrationLinkVerified": false,
+          "deadlineDate": null,
+          "dateISO": null
         },
         {
           "id": "logic-olympiad",
@@ -58,7 +72,14 @@
             "Logic",
             "Critical Thinking",
             "Olympiad"
-          ]
+          ],
+          "organisation": "International Logic Olympiad",
+          "location": "Online / Global",
+          "eligibility": "Students & Parents of Grades 8 to 11",
+          "registrationLink": "https://www.google.com/search?q=International%20Logic%20Olympiad",
+          "registrationLinkVerified": false,
+          "deadlineDate": "2027-01-24",
+          "dateISO": "2027-01-24"
         },
         {
           "id": "vexors-puzzles",
@@ -74,7 +95,14 @@
             "Logic",
             "Puzzles",
             "Reasoning"
-          ]
+          ],
+          "organisation": "Vexors",
+          "location": "Online / Global",
+          "eligibility": "Students & Parents of Grades 8 to 11",
+          "registrationLink": "https://www.google.com/search?q=Vexors%20Puzzles",
+          "registrationLinkVerified": false,
+          "deadlineDate": null,
+          "dateISO": null
         },
         {
           "id": "offers-to-visas-jun",
@@ -90,7 +118,14 @@
             "Visa",
             "Study Abroad",
             "Counselling"
-          ]
+          ],
+          "organisation": "Cialfo",
+          "location": "Online / Global",
+          "eligibility": "Students of Grades 11 to 12",
+          "registrationLink": "https://www.google.com/search?q=From%20Offers%20to%20Visas",
+          "registrationLinkVerified": false,
+          "deadlineDate": null,
+          "dateISO": null
         },
         {
           "id": "huso-2026",
@@ -107,7 +142,14 @@
             "Science",
             "STEM",
             "Olympiad"
-          ]
+          ],
+          "organisation": "Harvard Undergraduate Science Olympiad (HUSO)",
+          "location": "USA (Harvard University)",
+          "eligibility": "Students of Grades 7 to 10",
+          "registrationLink": "https://www.google.com/search?q=Harvard%20Undergraduate%20Science%20Olympiad%20%28HUSO%29%202026-27",
+          "registrationLinkVerified": false,
+          "deadlineDate": null,
+          "dateISO": null
         },
         {
           "id": "careers-in-sports",
@@ -123,7 +165,14 @@
             "Sports",
             "Careers",
             "Exploration"
-          ]
+          ],
+          "organisation": "The Shri Ram School CCC",
+          "location": "Online / Global",
+          "eligibility": "Students of Grades 9 to 12",
+          "registrationLink": "https://www.google.com/search?q=Careers%20in%20Sports",
+          "registrationLinkVerified": false,
+          "deadlineDate": null,
+          "dateISO": null
         },
         {
           "id": "aranyaarth-sustainability",
@@ -140,7 +189,14 @@
             "SDG",
             "Mentorship",
             "Entrepreneurship"
-          ]
+          ],
+          "organisation": "Aranyaarth Foundation",
+          "location": "Online / Global",
+          "eligibility": "Students of Grades 9 to 12",
+          "registrationLink": "https://www.google.com/search?q=Sustainability%20Project%20Building%20%E2%80%93%20Aranyaarth%20Foundation%20Mentorship%20Program",
+          "registrationLinkVerified": false,
+          "deadlineDate": null,
+          "dateISO": null
         },
         {
           "id": "indian-debating-league",
@@ -156,7 +212,14 @@
             "Debate",
             "Public Speaking",
             "Competition"
-          ]
+          ],
+          "organisation": "Indian Debating League",
+          "location": "Gurugram, India (School Campus)",
+          "eligibility": "Students of Grades 6 to 12",
+          "registrationLink": "https://www.google.com/search?q=Indian%20Debating%20League%202026",
+          "registrationLinkVerified": false,
+          "deadlineDate": null,
+          "dateISO": null
         },
         {
           "id": "tribesforgood-jun",
@@ -172,7 +235,14 @@
             "Social Justice",
             "Entrepreneurship",
             "Design Thinking"
-          ]
+          ],
+          "organisation": "TribesforGOOD",
+          "location": "Online / Global",
+          "eligibility": "Students of Grades 9 to 12",
+          "registrationLink": "https://www.google.com/search?q=TribesforGOOD%202026%20Summer%20Programs",
+          "registrationLinkVerified": false,
+          "deadlineDate": null,
+          "dateISO": null
         },
         {
           "id": "ntu-genai-bootcamp",
@@ -191,7 +261,14 @@
             "GenAI",
             "Singapore",
             "NTU"
-          ]
+          ],
+          "organisation": "Nanyang Technological University (NTU), Singapore",
+          "location": "Singapore",
+          "eligibility": "Students of Grades 11 & 12 (Min 16 yrs)",
+          "registrationLink": "https://www.google.com/search?q=NTU%20Singapore%20%E2%80%93%20GenAI%20Bootcamp%20Summer%20School",
+          "registrationLinkVerified": false,
+          "deadlineDate": "2026-06-29",
+          "dateISO": "2026-08-03"
         },
         {
           "id": "science-without-borders",
@@ -208,7 +285,14 @@
             "Marine Biology",
             "Art",
             "International"
-          ]
+          ],
+          "organisation": "Science Without Borders®",
+          "location": "Online / Global",
+          "eligibility": "Students of Grades 9 to 12",
+          "registrationLink": "https://www.google.com/search?q=Science%20Without%20Borders%C2%AE%20Challenge%202026%20%E2%80%93%20Semi-Finalists",
+          "registrationLinkVerified": false,
+          "deadlineDate": null,
+          "dateISO": null
         },
         {
           "id": "bocconi-summer-jun",
@@ -226,7 +310,14 @@
             "Bocconi",
             "University",
             "Summer"
-          ]
+          ],
+          "organisation": "Bocconi University, Milan",
+          "location": "Italy",
+          "eligibility": "Students of Grades 9 to 12",
+          "registrationLink": "https://www.google.com/search?q=Bocconi%20Summer%20School%202026%3A%20An%20Italian%20Summer",
+          "registrationLinkVerified": false,
+          "deadlineDate": "2026-07-06",
+          "dateISO": "2026-07-06"
         },
         {
           "id": "ai-internship-aiya",
@@ -243,7 +334,14 @@
             "Internship",
             "NTU",
             "Singapore"
-          ]
+          ],
+          "organisation": "Nanyang Technological University (NTU), Singapore",
+          "location": "Singapore",
+          "eligibility": "Students of Grades 9 to 11",
+          "registrationLink": "https://www.google.com/search?q=AI%20Internship%20for%20Young%20Achievers%20%28AIYA%29",
+          "registrationLinkVerified": false,
+          "deadlineDate": null,
+          "dateISO": null
         },
         {
           "id": "gaip-business",
@@ -259,7 +357,14 @@
             "Business",
             "Entrepreneurship",
             "Internship"
-          ]
+          ],
+          "organisation": "Global Academic Internship Programme (GAIP)",
+          "location": "Gurugram, India (School Campus)",
+          "eligibility": "Students of Grades 8 to 12",
+          "registrationLink": "https://www.google.com/search?q=GAIP%20Business%20%26%20Entrepreneurship%20%28Hybrid%29",
+          "registrationLinkVerified": false,
+          "deadlineDate": null,
+          "dateISO": null
         },
         {
           "id": "supros-career-exploration",
@@ -275,7 +380,14 @@
             "Internship",
             "Research",
             "Career Exploration"
-          ]
+          ],
+          "organisation": "SUPROS",
+          "location": "Gurugram, India (School Campus)",
+          "eligibility": "Students of Grades 9 to 12",
+          "registrationLink": "https://www.google.com/search?q=Career%20Exploration%20Matters%20%28SUPROS%20Internship%29",
+          "registrationLinkVerified": false,
+          "deadlineDate": null,
+          "dateISO": null
         },
         {
           "id": "aerospace-isro-internship",
@@ -292,7 +404,14 @@
             "ISRO",
             "Satellite",
             "Engineering"
-          ]
+          ],
+          "organisation": "Ex-ISRO Mentor Program",
+          "location": "India (Remote/Online)",
+          "eligibility": "Students of Grades 9 to 12",
+          "registrationLink": "https://www.google.com/search?q=Aerospace%20Engineer%20Internship%20Under%20an%20Ex-ISRO%20Mentor",
+          "registrationLinkVerified": false,
+          "deadlineDate": null,
+          "dateISO": null
         },
         {
           "id": "public-policy-girls",
@@ -309,7 +428,14 @@
             "Public Policy",
             "Girls",
             "Competition"
-          ]
+          ],
+          "organisation": "Public Policy Case Competition for High School Girls",
+          "location": "Online / Global",
+          "eligibility": "Students of Grades 9 to 12",
+          "registrationLink": "https://www.google.com/search?q=Public%20Policy%20Case%20Competition%20for%20High%20School%20Girls",
+          "registrationLinkVerified": false,
+          "deadlineDate": "2026-06-15",
+          "dateISO": null
         },
         {
           "id": "atlas-summer-school",
@@ -327,7 +453,14 @@
             "Business",
             "Tech",
             "Summer"
-          ]
+          ],
+          "organisation": "ATLAS Summer School",
+          "location": "Gurugram, India (School Campus)",
+          "eligibility": "Students of Grades 9 to 12",
+          "registrationLink": "https://www.google.com/search?q=ATLAS%20Summer%20School%202026%20%E2%80%93%20Design%2C%20Business%20%26%20Tech",
+          "registrationLinkVerified": false,
+          "deadlineDate": "2026-06-23",
+          "dateISO": "2026-06-23"
         },
         {
           "id": "tiger-stripes-rit",
@@ -344,7 +477,14 @@
             "Skills",
             "Internship",
             "Competition"
-          ]
+          ],
+          "organisation": "Rochester Institute of Technology (RIT)",
+          "location": "Online / Global",
+          "eligibility": "Students of Grades 9 to 11",
+          "registrationLink": "https://www.google.com/search?q=Tiger%20STRIPES%20%E2%80%93%20Rochester%20Institute%20of%20Technology",
+          "registrationLinkVerified": false,
+          "deadlineDate": null,
+          "dateISO": null
         },
         {
           "id": "music-production-summer",
@@ -361,7 +501,14 @@
             "Production",
             "Creative",
             "Studio"
-          ]
+          ],
+          "organisation": "Music Production & Creation Summer Program",
+          "location": "Gurugram, India (School Campus)",
+          "eligibility": "Students of Grades 9 to 12",
+          "registrationLink": "https://www.google.com/search?q=Summer%20Program%202026%20%E2%80%93%20Music%20Production%20%26%20Creation",
+          "registrationLinkVerified": false,
+          "deadlineDate": null,
+          "dateISO": null
         },
         {
           "id": "buildup-internships",
@@ -378,7 +525,14 @@
             "Internship",
             "Industry",
             "Career Readiness"
-          ]
+          ],
+          "organisation": "Build-up Internships",
+          "location": "Gurugram, India (School Campus)",
+          "eligibility": "Students of Grades 9 to 12",
+          "registrationLink": "https://www.google.com/search?q=Build-up%20Internships%202026%20Batch",
+          "registrationLinkVerified": false,
+          "deadlineDate": null,
+          "dateISO": null
         },
         {
           "id": "geniushub-summer",
@@ -394,7 +548,14 @@
             "Portfolio",
             "Mentorship",
             "Projects"
-          ]
+          ],
+          "organisation": "GeniusHub",
+          "location": "Online / Global",
+          "eligibility": "Students of Grades 8 to 12",
+          "registrationLink": "https://www.google.com/search?q=GeniusHub%20Summer%20Cohort%202026",
+          "registrationLinkVerified": false,
+          "deadlineDate": null,
+          "dateISO": null
         },
         {
           "id": "buildup-summer-june",
@@ -410,7 +571,14 @@
             "Internship",
             "Multi-Industry",
             "Projects"
-          ]
+          ],
+          "organisation": "BuildUp Summer",
+          "location": "Gurugram, India (School Campus)",
+          "eligibility": "Students of Grades 11 & 12",
+          "registrationLink": "https://www.google.com/search?q=BuildUp%20Summer%202026%20%E2%80%93%20June%20Cohort%20Updates",
+          "registrationLinkVerified": false,
+          "deadlineDate": null,
+          "dateISO": null
         },
         {
           "id": "climate-change-challenge",
@@ -428,7 +596,14 @@
             "Oxford",
             "Innovation",
             "Global"
-          ]
+          ],
+          "organisation": "Climate Change Challenge / University of Oxford",
+          "location": "United Kingdom (Oxford)",
+          "eligibility": "Students of Grades 10 to 12",
+          "registrationLink": "https://www.google.com/search?q=Climate%20Change%20Challenge%202026",
+          "registrationLinkVerified": false,
+          "deadlineDate": "2026-06-30",
+          "dateISO": null
         },
         {
           "id": "oxford-summer-schools",
@@ -448,7 +623,14 @@
             "AI",
             "Climate",
             "Entrepreneurship"
-          ]
+          ],
+          "organisation": "Saïd Business School, University of Oxford",
+          "location": "University of Oxford, United Kingdom",
+          "eligibility": "Students of Grades 11 & 12 only",
+          "registrationLink": "https://www.google.com/search?q=University%20of%20Oxford%20%E2%80%93%20Summer%20School%20Programmes",
+          "registrationLinkVerified": false,
+          "deadlineDate": "2026-07-19",
+          "dateISO": "2026-07-19"
         },
         {
           "id": "one-young-india",
@@ -466,7 +648,14 @@
             "Policy",
             "Entrepreneurship",
             "Governance"
-          ]
+          ],
+          "organisation": "One Young India",
+          "location": "Online / Global",
+          "eligibility": "Students of Grades 9 to 12",
+          "registrationLink": "https://www.google.com/search?q=Understanding%20the%20World%20You%20Navigate%20%E2%80%93%20One%20Young%20India",
+          "registrationLinkVerified": false,
+          "deadlineDate": "2026-06-09",
+          "dateISO": "2026-06-09"
         },
         {
           "id": "gaip-nus-business",
@@ -483,7 +672,14 @@
             "Singapore",
             "Business",
             "Internship"
-          ]
+          ],
+          "organisation": "National University of Singapore (NUS)",
+          "location": "Singapore",
+          "eligibility": "Students of Grades 8 to 12",
+          "registrationLink": "https://www.google.com/search?q=Global%20Academic%20Internship%20Programme%20%E2%80%93%20NUS%20Business%20%26%20Entrepreneurship",
+          "registrationLinkVerified": false,
+          "deadlineDate": null,
+          "dateISO": null
         },
         {
           "id": "aviation-internship",
@@ -499,7 +695,14 @@
             "Aviation",
             "Internship",
             "Careers"
-          ]
+          ],
+          "organisation": "International Aviation Internship",
+          "location": "Online / Global",
+          "eligibility": "Students of Grades 8 to 12",
+          "registrationLink": "https://www.google.com/search?q=International%20Aviation%20Internship%20for%20Teens",
+          "registrationLinkVerified": false,
+          "deadlineDate": null,
+          "dateISO": null
         },
         {
           "id": "ashoka-horizons",
@@ -515,7 +718,14 @@
             "Ashoka",
             "Skills",
             "Certification"
-          ]
+          ],
+          "organisation": "Ashoka University",
+          "location": "Online / Global",
+          "eligibility": "Students of Grades 9 to 12",
+          "registrationLink": "https://www.google.com/search?q=Ashoka%20Horizons%20Achievers%20Programme",
+          "registrationLinkVerified": false,
+          "deadlineDate": null,
+          "dateISO": null
         },
         {
           "id": "futurowise-courses",
@@ -532,7 +742,14 @@
             "Tech",
             "Blockchain",
             "AI"
-          ]
+          ],
+          "organisation": "Futurowise",
+          "location": "Online / Global",
+          "eligibility": "Students of Grades 11 & 12 only",
+          "registrationLink": "https://www.google.com/search?q=World%20Beyond%20Textbooks%20%E2%80%93%20Future%20Readiness%20Courses%20%28Futurowise%29",
+          "registrationLinkVerified": false,
+          "deadlineDate": null,
+          "dateISO": null
         },
         {
           "id": "masters-union-workshops",
@@ -549,7 +766,14 @@
             "AI",
             "Branding",
             "Investing"
-          ]
+          ],
+          "organisation": "Masters' Union",
+          "location": "Gurugram, India (School Campus)",
+          "eligibility": "Students of Grades 9 to 12",
+          "registrationLink": "https://www.google.com/search?q=NextGen%20Labs%3A%20Learning%20Workshops%20by%20Masters%27%20Union",
+          "registrationLinkVerified": false,
+          "deadlineDate": null,
+          "dateISO": null
         },
         {
           "id": "masters-union-bootcamp",
@@ -567,7 +791,14 @@
             "Skills",
             "Startups",
             "MUN"
-          ]
+          ],
+          "organisation": "Masters' Union",
+          "location": "Gurugram, India (School Campus)",
+          "eligibility": "Students of Grades 8 to 12",
+          "registrationLink": "https://www.google.com/search?q=Summer%20Bootcamp%20by%20Masters%27%20Union%3A%20Next-Gen%20Skills%20%26%20Startup%20Weeks",
+          "registrationLinkVerified": false,
+          "deadlineDate": "2026-08-24",
+          "dateISO": "2026-08-24"
         },
         {
           "id": "iit-coaching-cuet-jee-neet",
@@ -584,7 +815,14 @@
             "NEET",
             "CUET",
             "Free Coaching"
-          ]
+          ],
+          "organisation": "IIT & Ministry of Education (SATHEE Platform)",
+          "location": "Online / Global",
+          "eligibility": "Students of Grades 11 & 12",
+          "registrationLink": "https://www.google.com/search?q=IIT%20%26%20MoE%20%E2%80%93%20Free%20Coaching%20for%20CUET%2C%20JEE%2C%20NEET",
+          "registrationLinkVerified": false,
+          "deadlineDate": null,
+          "dateISO": null
         },
         {
           "id": "penn-step",
@@ -601,7 +839,14 @@
             "Tutoring",
             "Math",
             "Leadership"
-          ]
+          ],
+          "organisation": "University of Pennsylvania (Penn STEP)",
+          "location": "Online / Global",
+          "eligibility": "Students of Grades 6 to 12",
+          "registrationLink": "https://www.google.com/search?q=Penn%20STEP%20%28Student%20Tutoring%20Empowerment%20Program%29",
+          "registrationLinkVerified": false,
+          "deadlineDate": null,
+          "dateISO": null
         },
         {
           "id": "australia-connect",
@@ -617,7 +862,14 @@
             "Australia",
             "Study Abroad",
             "Bachelor's"
-          ]
+          ],
+          "organisation": "Australia Connect Program",
+          "location": "Online / Global",
+          "eligibility": "Students of Grade 12 Only",
+          "registrationLink": "https://www.google.com/search?q=Australia%20Connect%20Program",
+          "registrationLinkVerified": false,
+          "deadlineDate": null,
+          "dateISO": null
         },
         {
           "id": "johns-hopkins-workshops",
@@ -633,7 +885,14 @@
             "Johns Hopkins",
             "University",
             "Workshop"
-          ]
+          ],
+          "organisation": "Johns Hopkins University",
+          "location": "Online / Global",
+          "eligibility": "Students of Grades 9 to 11",
+          "registrationLink": "https://www.google.com/search?q=Johns%20Hopkins%20University%20%E2%80%93%20Online%20Workshops",
+          "registrationLinkVerified": false,
+          "deadlineDate": null,
+          "dateISO": null
         }
       ]
     },
@@ -662,7 +921,14 @@
             "UK",
             "UCAS",
             "Admissions"
-          ]
+          ],
+          "organisation": "UCAS",
+          "location": "Gurugram, India (School Campus)",
+          "eligibility": "Students & Parents of Grades 11 & 12",
+          "registrationLink": "https://www.google.com/search?q=UCAS%20Personal%20Statement%20Workshop",
+          "registrationLinkVerified": false,
+          "deadlineDate": "2026-08-03",
+          "dateISO": "2026-08-03"
         },
         {
           "id": "college-unfiltered",
@@ -678,7 +944,14 @@
             "Podcast",
             "Alumni",
             "College Life"
-          ]
+          ],
+          "organisation": "The Shri Ram School, Career Counselling Centre",
+          "location": "Online / Global",
+          "eligibility": "Students & Parents of Grades 9 to 12",
+          "registrationLink": "https://www.google.com/search?q=Alumni%20Podcast%20%E2%80%93%20College%20Unfiltered",
+          "registrationLinkVerified": false,
+          "deadlineDate": null,
+          "dateISO": null
         },
         {
           "id": "cemex-problem-solving",
@@ -696,7 +969,14 @@
             "Math",
             "Problem Solving",
             "Summer"
-          ]
+          ],
+          "organisation": "The Shri Ram School, Career Counselling Centre",
+          "location": "Online / Global",
+          "eligibility": "Students of Grades 9 to 12",
+          "registrationLink": "https://www.google.com/search?q=CEMEx%20Online%20Summer%20Problem-Solving%20Course",
+          "registrationLinkVerified": false,
+          "deadlineDate": "2026-05-29",
+          "dateISO": "2026-06-29"
         },
         {
           "id": "offers-to-visas",
@@ -712,7 +992,14 @@
             "Visa",
             "Study Abroad",
             "Counselling"
-          ]
+          ],
+          "organisation": "The Shri Ram School, Career Counselling Centre",
+          "location": "Online / Global",
+          "eligibility": "Students of Grades 11 to 12",
+          "registrationLink": "https://www.google.com/search?q=From%20Offers%20to%20Visas",
+          "registrationLinkVerified": false,
+          "deadlineDate": null,
+          "dateISO": null
         },
         {
           "id": "harvard-science-olympiad",
@@ -729,7 +1016,14 @@
             "Harvard",
             "Olympiad",
             "STEM"
-          ]
+          ],
+          "organisation": "Harvard",
+          "location": "USA (Harvard University)",
+          "eligibility": "Students of Grades 7 to 12",
+          "registrationLink": "https://www.google.com/search?q=Harvard%20Undergraduate%20Science%20Olympiad%20%28HUSO%29%202026-27",
+          "registrationLinkVerified": false,
+          "deadlineDate": null,
+          "dateISO": null
         },
         {
           "id": "careers-in-sports",
@@ -744,7 +1038,14 @@
           "tags": [
             "Sports",
             "Career Exploration"
-          ]
+          ],
+          "organisation": "The Shri Ram School CCC",
+          "location": "Online / Global",
+          "eligibility": "Students of Grades 9 to 12",
+          "registrationLink": "https://www.google.com/search?q=Careers%20in%20Sports",
+          "registrationLinkVerified": false,
+          "deadlineDate": null,
+          "dateISO": null
         },
         {
           "id": "sustainability-mentorship",
@@ -761,7 +1062,14 @@
             "SDG",
             "Design Thinking",
             "LOR"
-          ]
+          ],
+          "organisation": "The Shri Ram School, Career Counselling Centre",
+          "location": "Online / Global",
+          "eligibility": "Students of Grades 9 to 12",
+          "registrationLink": "https://www.google.com/search?q=Sustainability%20Project%20Building%20%E2%80%93%20Aranyaearth%20Foundation",
+          "registrationLinkVerified": false,
+          "deadlineDate": null,
+          "dateISO": null
         },
         {
           "id": "data-science-iit-madras",
@@ -780,7 +1088,14 @@
             "ML",
             "IIT",
             "Tech"
-          ]
+          ],
+          "organisation": "The Shri Ram School, Career Counselling Centre",
+          "location": "Online / Global",
+          "eligibility": "Students of Grades 9 to 12",
+          "registrationLink": "https://www.google.com/search?q=IIT%20Madras%2010-Day%20Machine%20Learning%20Boot%20Camp",
+          "registrationLinkVerified": false,
+          "deadlineDate": "2026-05-31",
+          "dateISO": "2026-06-10"
         },
         {
           "id": "indian-debating-league",
@@ -796,7 +1111,14 @@
             "Debate",
             "Public Speaking",
             "Competition"
-          ]
+          ],
+          "organisation": "Indian Debating League",
+          "location": "Gurugram, India (School Campus)",
+          "eligibility": "Students in Grades 6 to 12",
+          "registrationLink": "https://www.google.com/search?q=Indian%20Debating%20League%202026",
+          "registrationLinkVerified": false,
+          "deadlineDate": null,
+          "dateISO": null
         },
         {
           "id": "misti-summer-residency",
@@ -815,7 +1137,14 @@
             "Tech",
             "International",
             "Malaysia"
-          ]
+          ],
+          "organisation": "The Shri Ram School, Career Counselling Centre",
+          "location": "Kuala Lumpur, Malaysia",
+          "eligibility": "Students of Grades 9 to 12",
+          "registrationLink": "https://www.google.com/search?q=Summer%20Residency%20Program%20by%20MISTI%20%28MIT%29",
+          "registrationLinkVerified": false,
+          "deadlineDate": "2026-08-19",
+          "dateISO": "2026-08-19"
         },
         {
           "id": "tribesforGood-2026",
@@ -833,7 +1162,14 @@
             "Social Justice",
             "Entrepreneurship",
             "Design Thinking"
-          ]
+          ],
+          "organisation": "The Shri Ram School, Career Counselling Centre",
+          "location": "Online / Global",
+          "eligibility": "Students of Grades 9 to 12",
+          "registrationLink": "https://www.google.com/search?q=TribesforGOOD%202026%20Summer%20Programs",
+          "registrationLinkVerified": false,
+          "deadlineDate": "2026-05-10",
+          "dateISO": "2026-05-22"
         },
         {
           "id": "flame-design",
@@ -849,7 +1185,14 @@
             "Design",
             "University",
             "Creative"
-          ]
+          ],
+          "organisation": "The Shri Ram School, Career Counselling Centre",
+          "location": "Gurugram, India (School Campus)",
+          "eligibility": "Students of Grades 9 to 12",
+          "registrationLink": "https://www.google.com/search?q=FLAME%20University%20Summer%20Immersion%20%E2%80%93%20Design",
+          "registrationLinkVerified": false,
+          "deadlineDate": null,
+          "dateISO": null
         },
         {
           "id": "astronomy-astrophysics",
@@ -865,7 +1208,14 @@
             "Astronomy",
             "Science",
             "Competition"
-          ]
+          ],
+          "organisation": "The Shri Ram School, Career Counselling Centre",
+          "location": "Online / Global",
+          "eligibility": "Students in Grades 9 to 12",
+          "registrationLink": "https://www.google.com/search?q=International%20Astronomy%20and%20Astrophysics%20Competition%202026",
+          "registrationLinkVerified": false,
+          "deadlineDate": null,
+          "dateISO": null
         },
         {
           "id": "bblc-life-lab",
@@ -883,7 +1233,14 @@
             "Research",
             "Lab",
             "Leadership"
-          ]
+          ],
+          "organisation": "The Shri Ram School, Career Counselling Centre",
+          "location": "Gurugram, India (School Campus)",
+          "eligibility": "Students of Grades 9 to 12",
+          "registrationLink": "https://www.google.com/search?q=BBLC%20%E2%80%93%20Life%20Lab%20Foundation",
+          "registrationLinkVerified": false,
+          "deadlineDate": "2026-05-20",
+          "dateISO": null
         },
         {
           "id": "ntu-genai-bootcamp",
@@ -900,7 +1257,14 @@
             "GenAI",
             "Singapore",
             "Tech"
-          ]
+          ],
+          "organisation": "Nanyang Technological University (NTU), Singapore",
+          "location": "Singapore",
+          "eligibility": "Students of Grades 11 & 12 (Min 16yrs)",
+          "registrationLink": "https://www.google.com/search?q=NTU%20Singapore%20%E2%80%93%20GenAI%20Bootcamp",
+          "registrationLinkVerified": false,
+          "deadlineDate": null,
+          "dateISO": null
         },
         {
           "id": "science-without-borders",
@@ -917,7 +1281,14 @@
             "Art",
             "Marine Biology",
             "Competition"
-          ]
+          ],
+          "organisation": "Science Without Borders®",
+          "location": "Online / Global",
+          "eligibility": "Ages 11-14",
+          "registrationLink": "https://www.google.com/search?q=2026%20Science%20Without%20Borders%20Challenge",
+          "registrationLinkVerified": false,
+          "deadlineDate": null,
+          "dateISO": null
         },
         {
           "id": "bocconi-summer",
@@ -935,7 +1306,14 @@
             "Italy",
             "International",
             "University"
-          ]
+          ],
+          "organisation": "The Shri Ram School, Career Counselling Centre",
+          "location": "Italy",
+          "eligibility": "Students in Grades 9 to 12",
+          "registrationLink": "https://www.google.com/search?q=Bocconi%20Summer%20School%202026%3A%20An%20Italian%20Summer",
+          "registrationLinkVerified": false,
+          "deadlineDate": "2026-07-06",
+          "dateISO": "2026-07-06"
         },
         {
           "id": "lalit-summer-school",
@@ -951,7 +1329,14 @@
             "Hospitality",
             "Culinary",
             "Experiential Learning"
-          ]
+          ],
+          "organisation": "The Shri Ram School, Career Counselling Centre",
+          "location": "Gurugram, India (School Campus)",
+          "eligibility": "Students in Grades 9 to 12",
+          "registrationLink": "https://www.google.com/search?q=The%20Lalit%20Summer%20School%202026%20%283rd%20Edition%29",
+          "registrationLinkVerified": false,
+          "deadlineDate": null,
+          "dateISO": null
         },
         {
           "id": "oxford-sustainability",
@@ -968,7 +1353,14 @@
             "Sustainability",
             "Oxford",
             "Summit"
-          ]
+          ],
+          "organisation": "Oxford",
+          "location": "United Kingdom (Oxford)",
+          "eligibility": "Students of Grades 9 to 12",
+          "registrationLink": "https://www.google.com/search?q=Oxford%20Mini%20Sustainability%20Summit",
+          "registrationLinkVerified": false,
+          "deadlineDate": "2026-08-10",
+          "dateISO": "2026-08-10"
         },
         {
           "id": "climate-change-challenge",
@@ -985,7 +1377,14 @@
             "Climate",
             "Innovation",
             "Teamwork"
-          ]
+          ],
+          "organisation": "Climate Change Challenge / University of Oxford",
+          "location": "Online / Global",
+          "eligibility": "Teams of 3-5 students",
+          "registrationLink": "https://www.google.com/search?q=Climate%20Change%20Challenge%202026",
+          "registrationLinkVerified": false,
+          "deadlineDate": "2026-06-30",
+          "dateISO": null
         },
         {
           "id": "idl-debate",
@@ -1002,7 +1401,14 @@
             "Debate",
             "Speech",
             "Governance"
-          ]
+          ],
+          "organisation": "The Shri Ram School, Career Counselling Centre",
+          "location": "Gurugram, India (School Campus)",
+          "eligibility": "Students of Grades 6 to 12",
+          "registrationLink": "https://www.google.com/search?q=IDL%20Tournament%20%E2%80%93%20Speech%20%26%20Debate",
+          "registrationLinkVerified": false,
+          "deadlineDate": "2026-06-15",
+          "dateISO": null
         },
         {
           "id": "atlas-summer",
@@ -1020,7 +1426,14 @@
             "Business",
             "Tech",
             "Career"
-          ]
+          ],
+          "organisation": "The Shri Ram School, Career Counselling Centre",
+          "location": "Gurugram, India (School Campus)",
+          "eligibility": "Students of Grades 8 to 11",
+          "registrationLink": "https://www.google.com/search?q=ATLAS%20Summer%20School%202026%20%E2%80%93%20Design%2C%20Business%20%26%20Tech",
+          "registrationLinkVerified": false,
+          "deadlineDate": "2026-05-10",
+          "dateISO": "2026-05-10"
         },
         {
           "id": "tiger-stripes",
@@ -1037,7 +1450,14 @@
             "RIT",
             "Skills",
             "Resume"
-          ]
+          ],
+          "organisation": "RIT",
+          "location": "Online / Global",
+          "eligibility": "Students of Grades 9 to 11",
+          "registrationLink": "https://www.google.com/search?q=Tiger%20STRIPES%20%E2%80%93%20Virtual%20Internship%20%26%20Workshops%20%28RIT%29",
+          "registrationLinkVerified": false,
+          "deadlineDate": null,
+          "dateISO": null
         },
         {
           "id": "ecotourism",
@@ -1054,7 +1474,14 @@
             "Ecotourism",
             "Sustainability",
             "Conservation"
-          ]
+          ],
+          "organisation": "The Shri Ram School, Career Counselling Centre",
+          "location": "Gurugram, India (School Campus)",
+          "eligibility": "Students of Grades 9 to 12",
+          "registrationLink": "https://www.google.com/search?q=Ecotourism%20Foundations%20%26%20Sustainable%20Futures",
+          "registrationLinkVerified": false,
+          "deadlineDate": "2026-08-10",
+          "dateISO": "2026-08-10"
         },
         {
           "id": "music-production",
@@ -1070,7 +1497,14 @@
             "Music",
             "Production",
             "Creative Arts"
-          ]
+          ],
+          "organisation": "The Shri Ram School, Career Counselling Centre",
+          "location": "Gurugram, India (School Campus)",
+          "eligibility": "Students of Grades 9 to 12",
+          "registrationLink": "https://www.google.com/search?q=Music%20Production%20%26%20Creation%20%E2%80%93%20Summer%202026",
+          "registrationLinkVerified": false,
+          "deadlineDate": null,
+          "dateISO": null
         },
         {
           "id": "buildup-internships",
@@ -1088,7 +1522,14 @@
             "Industry",
             "Portfolio",
             "Certification"
-          ]
+          ],
+          "organisation": "Build-up Internships",
+          "location": "Gurugram, India (School Campus)",
+          "eligibility": "Students of Grades 9 to 12",
+          "registrationLink": "https://www.google.com/search?q=Build-up%20Internships%202026",
+          "registrationLinkVerified": false,
+          "deadlineDate": null,
+          "dateISO": null
         },
         {
           "id": "geniushub-summer",
@@ -1104,7 +1545,14 @@
             "Portfolio",
             "Mentorship",
             "Projects"
-          ]
+          ],
+          "organisation": "GeniusHub",
+          "location": "Online / Global",
+          "eligibility": "Students of Grades 8 to 12",
+          "registrationLink": "https://www.google.com/search?q=GeniusHub%20Summer%20Cohort%202026",
+          "registrationLinkVerified": false,
+          "deadlineDate": null,
+          "dateISO": null
         },
         {
           "id": "nextgen-masters-union",
@@ -1121,7 +1569,14 @@
             "AI",
             "Branding",
             "Workshops"
-          ]
+          ],
+          "organisation": "The Shri Ram School, Career Counselling Centre",
+          "location": "Gurugram, India (School Campus)",
+          "eligibility": "Students of Grades 9 to 12",
+          "registrationLink": "https://www.google.com/search?q=NextGen%20Labs%3A%20Learning%20Workshops%20by%20Masters%27%20Union",
+          "registrationLinkVerified": false,
+          "deadlineDate": null,
+          "dateISO": null
         },
         {
           "id": "masters-union-bootcamp",
@@ -1139,7 +1594,14 @@
             "MUN",
             "Startup",
             "Tech"
-          ]
+          ],
+          "organisation": "Masters' Union",
+          "location": "Gurugram, India (School Campus)",
+          "eligibility": "Students of Grades 8 to 12",
+          "registrationLink": "https://www.google.com/search?q=Summer%20Bootcamp%20by%20Masters%27%20Union%3A%20Next-Gen%20Skills",
+          "registrationLinkVerified": false,
+          "deadlineDate": "2026-08-03",
+          "dateISO": "2026-08-03"
         },
         {
           "id": "iit-moe-coaching",
@@ -1157,7 +1619,14 @@
             "CUET",
             "Free",
             "Entrance Exams"
-          ]
+          ],
+          "organisation": "The Shri Ram School, Career Counselling Centre",
+          "location": "Online / Global",
+          "eligibility": "Students of Grades 11 & 12",
+          "registrationLink": "https://www.google.com/search?q=IIT%20%26%20MoE%20%E2%80%93%20Free%20Coaching%20for%20CUET%2C%20JEE%2C%20NEET",
+          "registrationLinkVerified": false,
+          "deadlineDate": null,
+          "dateISO": null
         },
         {
           "id": "penn-step",
@@ -1174,7 +1643,14 @@
             "Leadership",
             "Math",
             "Penn"
-          ]
+          ],
+          "organisation": "University of Pennsylvania (Penn STEP)",
+          "location": "Online / Global",
+          "eligibility": "Students of Grades 6 to 12",
+          "registrationLink": "https://www.google.com/search?q=Penn%20STEP%20%E2%80%93%20Student%20Tutoring%20Empowerment%20Program",
+          "registrationLinkVerified": false,
+          "deadlineDate": null,
+          "dateISO": null
         },
         {
           "id": "australia-connect",
@@ -1190,7 +1666,14 @@
             "Australia",
             "Study Abroad",
             "Grade 12"
-          ]
+          ],
+          "organisation": "Australia Connect Program",
+          "location": "Online / Global",
+          "eligibility": "Grade 12 Only",
+          "registrationLink": "https://www.google.com/search?q=Australia%20Connect%20Program",
+          "registrationLinkVerified": false,
+          "deadlineDate": null,
+          "dateISO": null
         },
         {
           "id": "johns-hopkins-workshops",
@@ -1206,7 +1689,14 @@
             "Johns Hopkins",
             "University",
             "Workshop"
-          ]
+          ],
+          "organisation": "Johns Hopkins University",
+          "location": "Online / Global",
+          "eligibility": "Students of Grades 9 to 11",
+          "registrationLink": "https://www.google.com/search?q=Johns%20Hopkins%20University%20%E2%80%93%20Online%20Workshops",
+          "registrationLinkVerified": false,
+          "deadlineDate": null,
+          "dateISO": null
         }
       ]
     }

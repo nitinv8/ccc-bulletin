@@ -21,6 +21,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <main className="max-w-6xl mx-auto px-4 py-6">{children}</main>
           <footer className="border-t border-gray-200 mt-12 py-6 text-center text-xs text-gray-400">
             Career Counselling Centre &middot; The Shri Ram School, Aravali &amp; Moulsari
+            <span className="mx-2">&middot;</span>
+            <a href="/admin" className="hover:text-gray-600 hover:underline">
+              CCC Staff Admin
+            </a>
           </footer>
         </BookmarkProvider>
       </body>

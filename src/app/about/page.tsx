@@ -9,8 +9,14 @@ export default function AboutPage() {
           include university visits, summer programs, workshops, internships, competitions, and more.
         </p>
         <p className="text-gray-700 leading-relaxed">
-          This website makes the bulletin easier to browse, search, and filter. You can bookmark
-          programs that interest you and find them on your <strong>My Page</strong>.
+          This website makes the bulletin easier to browse, search, and filter. Every opportunity is its
+          own card with eligibility, location, dates, and a direct <strong>Register</strong> link, plus
+          options to <strong>Star</strong>, <strong>Add to Calendar</strong>, and <strong>Share</strong> it.
+        </p>
+        <p className="text-gray-700 leading-relaxed">
+          Head to <strong>My Page</strong> for your personal <strong>Inbox</strong> (new arrivals from the
+          latest bulletin), <strong>Starred</strong> (opportunities you've saved), and{" "}
+          <strong>Archive</strong> (things you've reviewed or aren't interested in — kept, not deleted).
         </p>
         <div className="bg-yellow-50 rounded-lg p-4 mt-4">
           <h3 className="text-sm font-semibold text-yellow-800 mb-2">Campuses</h3>

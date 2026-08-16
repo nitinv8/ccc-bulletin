@@ -1,20 +1,38 @@
 "use client";
 import { useState, useMemo } from "react";
 import ProgramCard from "@/components/ProgramCard";
-import FilterBar from "@/components/FilterBar";
-import bulletinData from "@/data/bulletins.json";
+import FilterBar, { FilterState } from "@/components/FilterBar";
+import { getBulletins, eligibilityGroup, matchesDeadlineFilter } from "@/lib/programs";
+
+const EMPTY_FILTERS: FilterState = {
+  search: "",
+  category: "",
+  type: "",
+  grade: "",
+  eligibility: "",
+  format: "",
+  location: "",
+  deadline: "",
+};
 
 export default function Home() {
+  const bulletinData = useMemo(() => getBulletins(), []);
   const [bulletinIndex, setBulletinIndex] = useState(0);
-  const bulletin = bulletinData.bulletins[bulletinIndex];
+  const bulletin = bulletinData[bulletinIndex];
   const programs = bulletin.programs;
 
-  const [selectedType, setSelectedType] = useState("");
-  const [selectedGrade, setSelectedGrade] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
+  const [filters, setFilters] = useState<FilterState>(EMPTY_FILTERS);
+  const updateFilters = (patch: Partial<FilterState>) => setFilters((f) => ({ ...f, ...patch }));
+  const clearFilters = () => setFilters(EMPTY_FILTERS);
 
-  const types = useMemo(
-    () => [...new Set(programs.map((p) => p.type))].sort(),
+  const types = useMemo(() => [...new Set(programs.map((p) => p.type))].sort(), [programs]);
+  const formats = useMemo(() => [...new Set(programs.map((p) => p.mode))].sort(), [programs]);
+  const locations = useMemo(
+    () => [...new Set(programs.map((p) => p.location).filter(Boolean))].sort() as string[],
+    [programs]
+  );
+  const eligibilities = useMemo(
+    () => [...new Set(programs.map((p) => eligibilityGroup(p)))].sort(),
     [programs]
   );
 
@@ -35,32 +53,41 @@ export default function Home() {
 
   const filtered = useMemo(() => {
     return programs.filter((p) => {
-      if (selectedType && p.type !== selectedType) return false;
-      if (selectedGrade) {
+      if (filters.category && p.category !== filters.category) return false;
+      if (filters.type && p.type !== filters.type) return false;
+      if (filters.format && p.mode !== filters.format) return false;
+      if (filters.location && p.location !== filters.location) return false;
+      if (filters.eligibility && eligibilityGroup(p) !== filters.eligibility) return false;
+      if (!matchesDeadlineFilter(p, filters.deadline)) return false;
+      if (filters.grade) {
         const parts = p.grades.split("-");
         if (parts.length === 2) {
           const start = parseInt(parts[0]);
           const end = parseInt(parts[1]);
-          const grade = parseInt(selectedGrade);
+          const grade = parseInt(filters.grade);
           if (grade < start || grade > end) return false;
-        } else if (parts[0] !== selectedGrade) return false;
+        } else if (parts[0] !== filters.grade) return false;
       }
-      if (searchQuery) {
-        const q = searchQuery.toLowerCase();
-        return (
-          p.title.toLowerCase().includes(q) ||
-          p.overview.toLowerCase().includes(q) ||
-          p.tags.some((t) => t.toLowerCase().includes(q))
-        );
+      if (filters.search) {
+        const q = filters.search.toLowerCase();
+        const haystack = [p.title, p.overview, p.organisation, ...(p.tags || [])]
+          .filter(Boolean)
+          .join(" ")
+          .toLowerCase();
+        if (!haystack.includes(q)) return false;
       }
       return true;
     });
-  }, [programs, selectedType, selectedGrade, searchQuery]);
+  }, [programs, filters]);
+
+  const activeCount = Object.entries(filters).filter(([k, v]) => k !== "search" && v).length;
 
   const categories = [
     { key: "university-visits", label: "University Visits & CCC Initiatives" },
     { key: "future-ready", label: "Activities to Make You Future Ready" },
   ];
+
+  const anyFilterActive = filters.search || activeCount > 0;
 
   return (
     <div>
@@ -70,13 +97,13 @@ export default function Home() {
           <span className="px-2.5 py-0.5 rounded-full bg-yellow-100 text-yellow-800 text-xs font-medium">
             {programs.length} programs
           </span>
-          {bulletinData.bulletins.length > 1 && (
+          {bulletinData.length > 1 && (
             <select
               value={bulletinIndex}
               onChange={(e) => setBulletinIndex(Number(e.target.value))}
               className="ml-auto px-3 py-1 rounded-lg border border-gray-200 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
             >
-              {bulletinData.bulletins.map((b, i) => (
+              {bulletinData.map((b, i) => (
                 <option key={b.id} value={i}>
                   {b.month}
                 </option>
@@ -88,17 +115,19 @@ export default function Home() {
       </div>
 
       <FilterBar
+        categories={categories}
         types={types}
         grades={allGrades}
-        selectedType={selectedType}
-        selectedGrade={selectedGrade}
-        searchQuery={searchQuery}
-        onTypeChange={setSelectedType}
-        onGradeChange={setSelectedGrade}
-        onSearchChange={setSearchQuery}
+        eligibilities={eligibilities}
+        formats={formats}
+        locations={locations}
+        filters={filters}
+        onChange={updateFilters}
+        onClear={clearFilters}
+        activeCount={activeCount}
       />
 
-      {searchQuery || selectedType || selectedGrade ? (
+      {anyFilterActive ? (
         <div>
           <p className="text-sm text-gray-500 mb-4">
             {filtered.length} program{filtered.length !== 1 ? "s" : ""} found
@@ -123,9 +152,7 @@ export default function Home() {
             <section key={cat.key} className="mb-8">
               <h3 className="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200">
                 {cat.label}
-                <span className="ml-2 text-sm font-normal text-gray-400">
-                  ({catPrograms.length})
-                </span>
+                <span className="ml-2 text-sm font-normal text-gray-400">({catPrograms.length})</span>
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {catPrograms.map((p) => (
