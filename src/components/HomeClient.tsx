@@ -91,27 +91,30 @@ export default function HomeClient({ bulletins }: { bulletins: Bulletin[] }) {
 
   return (
     <div>
-      <div className="mb-6">
-        <div className="flex items-center gap-3 mb-1">
-          <h2 className="text-2xl font-bold text-gray-900">{bulletin.month}</h2>
-          <span className="px-2.5 py-0.5 rounded-full bg-yellow-100 text-yellow-800 text-xs font-medium">
-            {programs.length} programs
-          </span>
-          {bulletins.length > 1 && (
-            <select
-              value={bulletinIndex}
-              onChange={(e) => setBulletinIndex(Number(e.target.value))}
-              className="ml-auto px-3 py-1 rounded-lg border border-gray-200 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
+      {/* Bulletin month tabs */}
+      {bulletins.length > 1 && (
+        <div className="flex gap-1 overflow-x-auto pb-1 mb-5 scrollbar-none">
+          {bulletins.map((b, i) => (
+            <button
+              key={b.id}
+              onClick={() => { setBulletinIndex(i); clearFilters(); }}
+              className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${
+                i === bulletinIndex
+                  ? "bg-yellow-400 text-yellow-900 shadow-sm"
+                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+              }`}
             >
-              {bulletins.map((b, i) => (
-                <option key={b.id} value={i}>
-                  {b.month}
-                </option>
-              ))}
-            </select>
-          )}
+              {b.month}
+            </button>
+          ))}
         </div>
-        <p className="text-sm text-gray-500">{bulletin.title}</p>
+      )}
+
+      <div className="mb-5 flex items-center gap-3">
+        <h2 className="text-xl font-bold text-gray-900">{bulletin.title || bulletin.month}</h2>
+        <span className="px-2.5 py-0.5 rounded-full bg-yellow-100 text-yellow-800 text-xs font-medium">
+          {programs.length} programs
+        </span>
       </div>
 
       <FilterBar

@@ -5,6 +5,17 @@ import { useRouter } from "next/navigation";
 import { useInteractions } from "./BookmarkProvider";
 import { Program, openCalendar, shareProgram, deadlineUrgency, isExpired, hasRealRegistrationLink } from "@/lib/programs";
 
+const typeAccent: Record<string, string> = {
+  "Summer Program": "border-l-orange-400",
+  Competition: "border-l-blue-500",
+  Workshop: "border-l-purple-500",
+  Internship: "border-l-green-500",
+  "In-Person Session": "border-l-red-400",
+  "Virtual Session": "border-l-teal-500",
+  Podcast: "border-l-pink-500",
+  Information: "border-l-gray-400",
+};
+
 const typeColors: Record<string, string> = {
   "Summer Program": "bg-orange-100 text-orange-700",
   Competition: "bg-blue-100 text-blue-700",
@@ -17,16 +28,34 @@ const typeColors: Record<string, string> = {
 };
 
 const deadlineStyles: Record<string, string> = {
-  expired: "bg-gray-100 text-gray-400 line-through",
+  expired: "bg-gray-100 text-gray-400",
   urgent: "bg-red-100 text-red-700",
   soon: "bg-orange-100 text-orange-700",
   normal: "bg-red-50 text-red-600",
   none: "",
 };
 
+// Inline SVG icons — no library needed
+function IconStar({ filled }: { filled: boolean }) {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill={filled ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+    </svg>
+  );
+}
+
+function IconArchive() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="21 8 21 21 3 21 3 8" />
+      <rect x="1" y="3" width="22" height="5" />
+      <line x1="10" y1="12" x2="14" y2="12" />
+    </svg>
+  );
+}
+
 export default function ProgramCard({
   program,
-  showArchiveAction = false,
   clickableCard = false,
 }: {
   program: Program;
@@ -40,6 +69,7 @@ export default function ProgramCard({
   const [shareMsg, setShareMsg] = useState<string | null>(null);
 
   const colorClass = typeColors[program.type] || "bg-gray-100 text-gray-700";
+  const accentClass = typeAccent[program.type] || "border-l-gray-300";
   const urgency = deadlineUrgency(program);
   const expired = isExpired(program);
   const hasRealLink = hasRealRegistrationLink(program);
@@ -57,65 +87,49 @@ export default function ProgramCard({
     }
   };
 
-  const handleCardClick = () => {
-    if (clickableCard) router.push(`/program/${program.id}`);
-  };
-
   return (
     <div
-      onClick={handleCardClick}
-      className={`bg-white rounded-xl border p-5 transition-shadow relative group ${
-        expired ? "border-gray-200 opacity-70" : "border-gray-200"
-      } ${clickableCard ? "cursor-pointer hover:shadow-md" : "hover:shadow-md"}`}
+      onClick={clickableCard ? () => router.push(`/program/${program.id}`) : undefined}
+      className={`bg-white rounded-xl border border-gray-200 border-l-4 ${accentClass} p-5 transition-all relative group ${
+        expired ? "opacity-60" : ""
+      } ${clickableCard ? "cursor-pointer hover:shadow-md hover:-translate-y-0.5" : "hover:shadow-md"}`}
     >
-      {/* Archive + Star buttons */}
-      <div className="absolute top-4 right-4 flex items-center gap-2">
-        <div className="relative group/archive">
+      {/* Star + Archive in top-right */}
+      <div className="absolute top-3.5 right-3.5 flex items-center gap-1.5">
+        <div className="relative group/arc">
           <button
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              archived ? unarchive(program.id) : archive(program.id);
-            }}
-            className={`text-lg transition-transform hover:scale-110 ${
-              archived ? "text-blue-400" : "text-gray-400 group-hover:text-gray-500"
-            }`}
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); archived ? unarchive(program.id) : archive(program.id); }}
+            className={`p-1 rounded transition-colors ${archived ? "text-blue-400" : "text-gray-300 hover:text-gray-500"}`}
+            title={archived ? "Unarchive" : "Archive"}
           >
-            🗄
+            <IconArchive />
           </button>
-          <span className="absolute -bottom-7 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-[10px] px-2 py-1 rounded whitespace-nowrap opacity-0 group-hover/archive:opacity-100 transition-opacity pointer-events-none z-10">
+          <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-[10px] px-1.5 py-0.5 rounded whitespace-nowrap opacity-0 group-hover/arc:opacity-100 transition-opacity pointer-events-none z-10">
             {archived ? "Unarchive" : "Archive"}
           </span>
         </div>
         <div className="relative group/star">
           <button
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              toggleBookmark(program.id);
-            }}
-            className={`text-xl transition-transform hover:scale-110 ${
-              bookmarked ? "text-yellow-500" : "text-gray-300 group-hover:text-gray-400"
-            }`}
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleBookmark(program.id); }}
+            className={`p-1 rounded transition-colors ${bookmarked ? "text-yellow-500" : "text-gray-300 hover:text-gray-500"}`}
+            title={bookmarked ? "Remove star" : "Star this"}
           >
-            {bookmarked ? "★" : "☆"}
+            <IconStar filled={bookmarked} />
           </button>
-          <span className="absolute -bottom-7 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-[10px] px-2 py-1 rounded whitespace-nowrap opacity-0 group-hover/star:opacity-100 transition-opacity pointer-events-none z-10">
-            {bookmarked ? "Remove star" : "Star this"}
+          <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-[10px] px-1.5 py-0.5 rounded whitespace-nowrap opacity-0 group-hover/star:opacity-100 transition-opacity pointer-events-none z-10">
+            {bookmarked ? "Starred" : "Star"}
           </span>
         </div>
       </div>
 
-      {/* Badges */}
-      <div className="flex flex-wrap gap-2 mb-3 pr-8">
-        <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${colorClass}`}>
-          {program.type}
-        </span>
+      {/* Type + grade + mode pills */}
+      <div className="flex flex-wrap gap-1.5 mb-3 pr-16">
+        <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${colorClass}`}>{program.type}</span>
         <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-50 text-yellow-700">
-          Grades {program.grades}
+          Gr {program.grades}
         </span>
         {program.mode && (
-          <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-50 text-gray-600">
+          <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-50 text-gray-500">
             {program.mode}
           </span>
         )}
@@ -125,85 +139,84 @@ export default function ProgramCard({
           </span>
         )}
         {expired && (
-          <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-200 text-gray-500">
+          <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-200 text-gray-400">
             Expired
           </span>
         )}
       </div>
 
-      {/* Title — clickable link on non-clickable cards, plain text on clickable cards */}
+      {/* Title */}
       {clickableCard ? (
-        <h3 className="text-lg font-semibold text-gray-900 mb-1 pr-8">{program.title}</h3>
+        <h3 className="text-base font-semibold text-gray-900 mb-0.5 pr-2 leading-snug">{program.title}</h3>
       ) : (
         <Link href={`/program/${program.id}`} onClick={(e) => e.stopPropagation()}>
-          <h3 className="text-lg font-semibold text-gray-900 mb-1 hover:text-yellow-700 transition-colors pr-8">
+          <h3 className="text-base font-semibold text-gray-900 mb-0.5 hover:text-yellow-700 transition-colors pr-2 leading-snug">
             {program.title}
           </h3>
         </Link>
       )}
 
       {program.organisation && (
-        <p className="text-xs text-gray-500 mb-2">{program.organisation}</p>
+        <p className="text-xs text-gray-400 mb-2 font-medium">{program.organisation}</p>
       )}
 
-      <p className="text-sm text-gray-600 mb-3 line-clamp-2">{program.overview}</p>
+      <p className="text-sm text-gray-600 mb-3 line-clamp-2 leading-relaxed">{program.overview}</p>
 
-      <div className="flex flex-wrap gap-3 text-xs text-gray-500 mb-2">
+      {/* Date + location metadata */}
+      <div className="flex flex-wrap gap-3 text-xs text-gray-400 mb-2">
         {program.location && (
-          <span className="flex items-center gap-1">
-            <span>&#128205;</span> {program.location}
-          </span>
+          <span className="flex items-center gap-1">📍 {program.location}</span>
         )}
         {program.date && (
-          <span className="flex items-center gap-1">
-            <span>&#128197;</span> {program.date}
-          </span>
+          <span className="flex items-center gap-1">📅 {program.date}</span>
         )}
       </div>
 
+      {/* Deadline badge */}
       {program.deadline && (
         <div className="mb-3">
-          <span
-            className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium ${
-              deadlineStyles[urgency] || deadlineStyles.normal
-            }`}
-          >
-            <span>&#9200;</span> Deadline: {program.deadline}
+          <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium ${deadlineStyles[urgency] || deadlineStyles.normal}`}>
+            ⏰ {program.deadline}
           </span>
         </div>
       )}
 
-      {/* Actions */}
+      {/* Action row */}
       <div className="flex flex-wrap items-center gap-2 pt-3 border-t border-gray-100">
-        {/* Only show Register if there's a real verified link */}
-        {hasRealLink && (
+        {hasRealLink && !expired && (
           <a
             href={program.registrationLink}
             target="_blank"
             rel="noopener noreferrer"
             onClick={(e) => e.stopPropagation()}
-            className="px-3 py-1.5 rounded-lg bg-yellow-400 text-yellow-900 text-xs font-semibold hover:bg-yellow-500 transition-colors"
+            className="px-3.5 py-1.5 rounded-lg bg-yellow-400 text-yellow-900 text-xs font-semibold hover:bg-yellow-500 transition-colors shadow-sm"
           >
-            Register &rarr;
+            Register →
+          </a>
+        )}
+        {hasRealLink && expired && (
+          <a
+            href={program.registrationLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="px-3.5 py-1.5 rounded-lg border border-gray-200 text-gray-500 text-xs font-medium hover:bg-gray-50 transition-colors"
+          >
+            View →
           </a>
         )}
         <button
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            openCalendar(program);
-          }}
-          className="px-2.5 py-1.5 rounded-lg border border-gray-200 text-xs text-gray-600 hover:bg-gray-50 transition-colors"
+          onClick={(e) => { e.preventDefault(); e.stopPropagation(); openCalendar(program); }}
+          className="px-2.5 py-1.5 rounded-lg border border-gray-200 text-xs text-gray-500 hover:bg-gray-50 transition-colors"
           title="Add to Calendar"
         >
-          &#128197; Calendar
+          📅 Calendar
         </button>
         <button
           onClick={handleShare}
-          className="px-2.5 py-1.5 rounded-lg border border-gray-200 text-xs text-gray-600 hover:bg-gray-50 transition-colors relative"
-          title="Share"
+          className="px-2.5 py-1.5 rounded-lg border border-gray-200 text-xs text-gray-500 hover:bg-gray-50 transition-colors relative"
         >
-          &#128257; Share
+          Share
           {shareMsg && (
             <span className="absolute -top-7 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-[10px] px-2 py-1 rounded whitespace-nowrap">
               {shareMsg}
@@ -213,9 +226,9 @@ export default function ProgramCard({
       </div>
 
       {/* Tags */}
-      <div className="flex flex-wrap gap-1.5 mt-3 pt-3 border-t border-gray-100">
+      <div className="flex flex-wrap gap-1 mt-3">
         {program.tags.slice(0, 4).map((tag) => (
-          <span key={tag} className="px-2 py-0.5 bg-gray-50 text-gray-500 rounded text-[11px]">
+          <span key={tag} className="px-2 py-0.5 bg-gray-50 text-gray-400 rounded text-[11px]">
             {tag}
           </span>
         ))}
