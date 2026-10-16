@@ -43,6 +43,7 @@ export default function ProgramCard({
   const urgency = deadlineUrgency(program);
   const expired = isExpired(program);
   const hasRealLink = hasRealRegistrationLink(program);
+  const showNew = program.isNew && !expired;
 
   const handleShare = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -116,6 +117,11 @@ export default function ProgramCard({
         {program.mode && (
           <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-50 text-gray-600">
             {program.mode}
+          </span>
+        )}
+        {showNew && (
+          <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-100 text-green-700">
+            NEW
           </span>
         )}
         {expired && (

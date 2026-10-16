@@ -23,6 +23,12 @@ export interface Program {
   registrationLinkVerified?: boolean;
   deadlineDate?: string | null;
   dateISO?: string | null;
+  isNew?: boolean;
+  imageUrl?: string;
+  videoLink?: string;
+  qrCodeUrl?: string;
+  brochureUrl?: string;
+  instructions?: string;
 }
 
 export interface Bulletin {

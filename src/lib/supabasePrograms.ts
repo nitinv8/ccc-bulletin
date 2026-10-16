@@ -56,6 +56,12 @@ function toProgram(row: SupabaseProgram): Program {
     registrationLinkVerified: row.registration_link_verified,
     deadlineDate: row.deadline_date,
     dateISO: row.date_iso,
+    isNew: row.is_new,
+    imageUrl: row.image_url ?? undefined,
+    videoLink: row.video_link ?? undefined,
+    qrCodeUrl: row.qr_code_url ?? undefined,
+    brochureUrl: row.brochure_url ?? undefined,
+    instructions: row.instructions ?? undefined,
   };
 }
 
