@@ -81,31 +81,31 @@ export default function ProgramPageClient({ program }: { program: Program | null
               </span>
             )}
           </div>
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-1.5 shrink-0">
             <div className="relative group">
               <button
                 onClick={() => (archived ? unarchive(program.id) : archive(program.id))}
-                className={`text-xl transition-transform hover:scale-110 ${
-                  archived ? "text-blue-400" : "text-gray-300 hover:text-gray-400"
-                }`}
+                className={`p-1.5 rounded transition-colors ${archived ? "text-blue-400" : "text-gray-300 hover:text-gray-500"}`}
               >
-                🗄
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/>
+                </svg>
               </button>
-              <span className="absolute -bottom-7 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-[11px] px-2 py-1 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+              <span className="absolute -bottom-7 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-[10px] px-2 py-0.5 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
                 {archived ? "Unarchive" : "Archive"}
               </span>
             </div>
             <div className="relative group">
               <button
                 onClick={() => toggleBookmark(program.id)}
-                className={`text-2xl transition-transform hover:scale-110 ${
-                  bookmarked ? "text-yellow-500" : "text-gray-300 hover:text-gray-400"
-                }`}
+                className={`p-1.5 rounded transition-colors ${bookmarked ? "text-yellow-500" : "text-gray-300 hover:text-gray-500"}`}
               >
-                {bookmarked ? "★" : "☆"}
+                <svg width="19" height="19" viewBox="0 0 24 24" fill={bookmarked ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                </svg>
               </button>
-              <span className="absolute -bottom-7 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-[11px] px-2 py-1 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
-                {bookmarked ? "Remove star" : "Star this"}
+              <span className="absolute -bottom-7 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-[10px] px-2 py-0.5 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+                {bookmarked ? "Starred" : "Star"}
               </span>
             </div>
           </div>

@@ -110,11 +110,13 @@ export default function HomeClient({ bulletins }: { bulletins: Bulletin[] }) {
         </div>
       )}
 
-      <div className="mb-5 flex items-center gap-3">
-        <h2 className="text-xl font-bold text-gray-900">{bulletin.title || bulletin.month}</h2>
-        <span className="px-2.5 py-0.5 rounded-full bg-yellow-100 text-yellow-800 text-xs font-medium">
-          {programs.length} programs
-        </span>
+      <div className="mb-5">
+        <div className="flex items-center gap-2.5">
+          <h2 className="text-lg font-bold text-gray-900 leading-tight">{bulletin.title || bulletin.month}</h2>
+          <span className="px-2.5 py-0.5 rounded-full bg-yellow-100 text-yellow-800 text-xs font-semibold">
+            {programs.length}
+          </span>
+        </div>
       </div>
 
       <FilterBar
@@ -152,11 +154,12 @@ export default function HomeClient({ bulletins }: { bulletins: Bulletin[] }) {
           const catPrograms = filtered.filter((p) => p.category === cat.key);
           if (catPrograms.length === 0) return null;
           return (
-            <section key={cat.key} className="mb-8">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200">
-                {cat.label}
-                <span className="ml-2 text-sm font-normal text-gray-400">({catPrograms.length})</span>
-              </h3>
+            <section key={cat.key} className="mb-10">
+              <div className="flex items-center gap-3 mb-4">
+                <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider">{cat.label}</h3>
+                <div className="flex-1 h-px bg-gray-200" />
+                <span className="text-xs font-medium text-gray-400">{catPrograms.length}</span>
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {catPrograms.map((p) => (
                   <ProgramCard key={p.id} program={p} clickableCard={true} />
