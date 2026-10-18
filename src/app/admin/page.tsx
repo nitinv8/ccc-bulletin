@@ -1,11 +1,12 @@
 "use client";
 import { useState, useEffect, useRef, useMemo } from "react";
-import { Program } from "@/lib/programs";
+import { Program, isExpired } from "@/lib/programs";
 import { slugify } from "@/lib/adminStore";
 import {
   adminSignIn, adminSignUp, adminSignOut, listenAuthState, getSession,
   adminGetBulletins, adminCreateBulletin,
-  adminGetPrograms, adminUpsertProgram, adminArchiveProgram,
+  adminGetPrograms, adminGetArchivedPrograms,
+  adminUpsertProgram, adminArchiveProgram, adminRestoreProgram, adminDeleteProgram,
   uploadFile,
 } from "@/lib/supabaseAdmin";
 
@@ -21,7 +22,6 @@ const CATEGORY_OPTIONS = [
   { key: "future-ready", label: "Activities to Make You Future Ready" },
 ];
 
-// Comma-separated admin emails from env var — undefined means allow any authenticated user
 const ALLOWED_EMAILS = process.env.NEXT_PUBLIC_ADMIN_EMAILS
   ? process.env.NEXT_PUBLIC_ADMIN_EMAILS.split(",").map((e) => e.trim().toLowerCase())
   : null;
@@ -134,14 +134,50 @@ function AuthScreen() {
 // ─── dashboard ────────────────────────────────────────────────────────────────
 
 type BulletinRow = { id: string; title: string; month: string };
+type Tab = "active" | "archived";
+
+function rowToProgram(r: Record<string, unknown>): Program {
+  return {
+    id: r.id as string,
+    title: r.title as string,
+    type: r.type as string,
+    category: r.category as string,
+    campus: r.campus as string,
+    grades: r.grades as string,
+    audience: (r.audience ?? "") as string,
+    overview: r.overview as string,
+    date: (r.date ?? "") as string,
+    deadline: (r.deadline ?? "") as string,
+    venue: (r.venue ?? "") as string,
+    time: (r.time ?? "") as string,
+    mode: r.mode as string,
+    tags: (r.tags ?? []) as string[],
+    organisation: (r.organisation ?? "") as string,
+    location: (r.location ?? "") as string,
+    eligibility: (r.eligibility ?? "") as string,
+    registrationLink: (r.registration_link ?? "") as string,
+    registrationLinkVerified: r.registration_link_verified as boolean,
+    deadlineDate: r.deadline_date as string | null,
+    dateISO: r.date_iso as string | null,
+    isNew: r.is_new as boolean,
+    imageUrl: (r.image_url ?? "") as string,
+    videoLink: (r.video_link ?? "") as string,
+    qrCodeUrl: (r.qr_code_url ?? "") as string,
+    brochureUrl: (r.brochure_url ?? "") as string,
+    instructions: (r.instructions ?? "") as string,
+  };
+}
 
 function AdminDashboard() {
   const [bulletins, setBulletins] = useState<BulletinRow[]>([]);
   const [bulletinIdx, setBulletinIdx] = useState(0);
   const [programs, setPrograms] = useState<Program[]>([]);
+  const [archived, setArchived] = useState<Program[]>([]);
+  const [tab, setTab] = useState<Tab>("active");
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState<Program | null>(null);
   const [isNewProgram, setIsNewProgram] = useState(false);
+  const [previewing, setPreviewing] = useState<Program | null>(null);
   const [showNewBulletin, setShowNewBulletin] = useState(false);
   const [toast, setToast] = useState("");
 
@@ -162,37 +198,12 @@ function AdminDashboard() {
   const loadPrograms = async (bulletinId: string) => {
     setLoading(true);
     try {
-      const rows = await adminGetPrograms(bulletinId);
-      // map DB rows back to Program interface
-      setPrograms(rows.map((r: Record<string, unknown>) => ({
-        id: r.id as string,
-        title: r.title as string,
-        type: r.type as string,
-        category: r.category as string,
-        campus: r.campus as string,
-        grades: r.grades as string,
-        audience: (r.audience ?? "") as string,
-        overview: r.overview as string,
-        date: (r.date ?? "") as string,
-        deadline: (r.deadline ?? "") as string,
-        venue: (r.venue ?? "") as string,
-        time: (r.time ?? "") as string,
-        mode: r.mode as string,
-        tags: (r.tags ?? []) as string[],
-        organisation: (r.organisation ?? "") as string,
-        location: (r.location ?? "") as string,
-        eligibility: (r.eligibility ?? "") as string,
-        registrationLink: (r.registration_link ?? "") as string,
-        registrationLinkVerified: r.registration_link_verified as boolean,
-        deadlineDate: r.deadline_date as string | null,
-        dateISO: r.date_iso as string | null,
-        isNew: r.is_new as boolean,
-        imageUrl: (r.image_url ?? "") as string,
-        videoLink: (r.video_link ?? "") as string,
-        qrCodeUrl: (r.qr_code_url ?? "") as string,
-        brochureUrl: (r.brochure_url ?? "") as string,
-        instructions: (r.instructions ?? "") as string,
-      })));
+      const [active, arch] = await Promise.all([
+        adminGetPrograms(bulletinId),
+        adminGetArchivedPrograms(bulletinId),
+      ]);
+      setPrograms(active.map(rowToProgram));
+      setArchived(arch.map(rowToProgram));
     } finally {
       setLoading(false);
     }
@@ -221,13 +232,37 @@ function AdminDashboard() {
   };
 
   const handleArchive = async (id: string) => {
-    if (!confirm("Archive this opportunity? It will no longer appear on the site.")) return;
+    if (!confirm("Archive this opportunity? It will be hidden from students but you can restore it.")) return;
     try {
       await adminArchiveProgram(id);
       showToast("Archived");
-      setPrograms((ps) => ps.filter((p) => p.id !== id));
+      const bulletinId = bulletins[bulletinIdx]?.id;
+      if (bulletinId) loadPrograms(bulletinId);
     } catch (e: unknown) {
       alert("Archive failed: " + (e instanceof Error ? e.message : String(e)));
+    }
+  };
+
+  const handleRestore = async (id: string) => {
+    try {
+      await adminRestoreProgram(id);
+      showToast("Restored ✓");
+      const bulletinId = bulletins[bulletinIdx]?.id;
+      if (bulletinId) loadPrograms(bulletinId);
+    } catch (e: unknown) {
+      alert("Restore failed: " + (e instanceof Error ? e.message : String(e)));
+    }
+  };
+
+  const handleDelete = async (id: string, title: string) => {
+    if (!confirm(`Permanently delete "${title}"?\n\nThis cannot be undone.`)) return;
+    try {
+      await adminDeleteProgram(id);
+      showToast("Deleted");
+      const bulletinId = bulletins[bulletinIdx]?.id;
+      if (bulletinId) loadPrograms(bulletinId);
+    } catch (e: unknown) {
+      alert("Delete failed: " + (e instanceof Error ? e.message : String(e)));
     }
   };
 
@@ -244,6 +279,7 @@ function AdminDashboard() {
   };
 
   const bulletin = bulletins[bulletinIdx];
+  const displayed = tab === "active" ? programs : archived;
 
   return (
     <div>
@@ -266,14 +302,15 @@ function AdminDashboard() {
         </div>
       )}
 
-      <div className="flex items-center gap-3 mb-4 flex-wrap">
+      {/* Bulletin selector + actions */}
+      <div className="flex items-center gap-3 mb-5 flex-wrap">
         <select
           value={bulletinIdx}
           onChange={(e) => setBulletinIdx(Number(e.target.value))}
           className="px-3 py-2 rounded-lg border border-gray-200 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
         >
           {bulletins.map((b, i) => (
-            <option key={b.id} value={i}>{b.month} ({b.id})</option>
+            <option key={b.id} value={i}>{b.month} — {b.title}</option>
           ))}
         </select>
         <button
@@ -290,43 +327,109 @@ function AdminDashboard() {
         </button>
       </div>
 
-      <div className="bg-white rounded-xl border border-gray-200 divide-y divide-gray-100">
-        {loading && <p className="p-6 text-center text-sm text-gray-400">Loading…</p>}
-        {!loading && programs.length === 0 && (
-          <p className="p-6 text-center text-sm text-gray-400">No opportunities in this bulletin yet.</p>
-        )}
-        {!loading && programs.map((p) => (
-          <div key={p.id} className="p-4 flex items-center justify-between gap-3 flex-wrap">
-            <div className="min-w-0">
-              <div className="flex items-center gap-2">
-                <p className="text-sm font-medium text-gray-900 truncate">{p.title}</p>
-                {p.isNew && (
-                  <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-green-100 text-green-700">NEW</span>
-                )}
-              </div>
-              <p className="text-xs text-gray-500">
-                {p.type} · Grades {p.grades}
-                {p.deadline ? ` · Deadline: ${p.deadline}` : ""}
-              </p>
-            </div>
-            <div className="flex gap-2 shrink-0">
-              <button
-                onClick={() => { setEditing({ ...p }); setIsNewProgram(false); }}
-                className="px-3 py-1.5 rounded-lg border border-gray-200 text-xs text-gray-700 hover:bg-gray-50"
-              >
-                Edit
-              </button>
-              <button
-                onClick={() => handleArchive(p.id)}
-                className="px-3 py-1.5 rounded-lg border border-gray-200 text-xs text-orange-600 hover:bg-orange-50"
-              >
-                Archive
-              </button>
-            </div>
-          </div>
-        ))}
+      {/* Active / Archived tabs */}
+      <div className="flex gap-1 mb-4 border-b border-gray-200">
+        <button
+          onClick={() => setTab("active")}
+          className={`px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors ${
+            tab === "active"
+              ? "border-yellow-400 text-gray-900"
+              : "border-transparent text-gray-500 hover:text-gray-700"
+          }`}
+        >
+          Active
+          <span className="ml-1.5 px-1.5 py-0.5 rounded-full text-[10px] bg-gray-100 text-gray-600">
+            {programs.length}
+          </span>
+        </button>
+        <button
+          onClick={() => setTab("archived")}
+          className={`px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors ${
+            tab === "archived"
+              ? "border-yellow-400 text-gray-900"
+              : "border-transparent text-gray-500 hover:text-gray-700"
+          }`}
+        >
+          Archived
+          <span className="ml-1.5 px-1.5 py-0.5 rounded-full text-[10px] bg-gray-100 text-gray-600">
+            {archived.length}
+          </span>
+        </button>
       </div>
 
+      {/* Program list */}
+      <div className="bg-white rounded-xl border border-gray-200 divide-y divide-gray-100">
+        {loading && <p className="p-6 text-center text-sm text-gray-400">Loading…</p>}
+        {!loading && displayed.length === 0 && (
+          <p className="p-6 text-center text-sm text-gray-400">
+            {tab === "active" ? "No active opportunities in this bulletin." : "No archived opportunities."}
+          </p>
+        )}
+        {!loading && displayed.map((p) => {
+          const expired = isExpired(p);
+          return (
+            <div key={p.id} className="p-4 flex items-center justify-between gap-3 flex-wrap">
+              <div className="min-w-0">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <p className="text-sm font-medium text-gray-900 truncate">{p.title}</p>
+                  {p.isNew && (
+                    <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-green-100 text-green-700">NEW</span>
+                  )}
+                  {expired && (
+                    <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-gray-200 text-gray-400">Expired</span>
+                  )}
+                </div>
+                <p className="text-xs text-gray-500 mt-0.5">
+                  {p.type} · Grades {p.grades}
+                  {p.deadline ? ` · Deadline: ${p.deadline}` : ""}
+                </p>
+              </div>
+              <div className="flex gap-2 shrink-0">
+                <button
+                  onClick={() => setPreviewing(p)}
+                  className="px-3 py-1.5 rounded-lg border border-gray-200 text-xs text-gray-600 hover:bg-gray-50"
+                >
+                  Preview
+                </button>
+                {tab === "active" && (
+                  <>
+                    <button
+                      onClick={() => { setEditing({ ...p }); setIsNewProgram(false); }}
+                      className="px-3 py-1.5 rounded-lg border border-gray-200 text-xs text-gray-700 hover:bg-gray-50"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleArchive(p.id)}
+                      className="px-3 py-1.5 rounded-lg border border-gray-200 text-xs text-orange-600 hover:bg-orange-50"
+                    >
+                      Archive
+                    </button>
+                  </>
+                )}
+                {tab === "archived" && (
+                  <>
+                    <button
+                      onClick={() => handleRestore(p.id)}
+                      className="px-3 py-1.5 rounded-lg border border-green-200 text-xs text-green-700 hover:bg-green-50"
+                    >
+                      Restore
+                    </button>
+                    <button
+                      onClick={() => handleDelete(p.id, p.title)}
+                      className="px-3 py-1.5 rounded-lg border border-red-200 text-xs text-red-600 hover:bg-red-50"
+                    >
+                      Delete
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Modals */}
       {editing && (
         <ProgramEditor
           program={editing}
@@ -334,7 +437,12 @@ function AdminDashboard() {
           isNew={isNewProgram}
           onCancel={() => setEditing(null)}
           onSave={handleSave}
+          onPreview={(p) => setPreviewing(p)}
         />
+      )}
+
+      {previewing && (
+        <PreviewModal program={previewing} onClose={() => setPreviewing(null)} />
       )}
 
       {showNewBulletin && (
@@ -343,6 +451,90 @@ function AdminDashboard() {
           onCreate={handleAddBulletin}
         />
       )}
+    </div>
+  );
+}
+
+// ─── preview modal ────────────────────────────────────────────────────────────
+
+const typeColors: Record<string, string> = {
+  "Summer Program": "bg-orange-100 text-orange-700",
+  Competition: "bg-blue-100 text-blue-700",
+  Workshop: "bg-purple-100 text-purple-700",
+  Internship: "bg-green-100 text-green-700",
+  "In-Person Session": "bg-red-100 text-red-700",
+  "Virtual Session": "bg-teal-100 text-teal-700",
+  Podcast: "bg-pink-100 text-pink-700",
+  Information: "bg-gray-100 text-gray-700",
+};
+
+function PreviewModal({ program: p, onClose }: { program: Program; onClose: () => void }) {
+  const colorClass = typeColors[p.type] || "bg-gray-100 text-gray-700";
+  const expired = isExpired(p);
+  const hasRegLink = p.registrationLink && !p.registrationLink.includes("google.com/search");
+  const hasVideoLink = !!p.videoLink;
+  const isVideoOnly = hasVideoLink && !hasRegLink;
+
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-start justify-center p-4 z-50 overflow-y-auto">
+      <div className="bg-white rounded-xl w-full max-w-2xl my-8 overflow-hidden">
+        {/* Preview header */}
+        <div className="flex items-center justify-between px-5 py-3 bg-gray-50 border-b border-gray-200">
+          <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Student preview</span>
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-xl leading-none">×</button>
+        </div>
+
+        <div className="p-6">
+          {/* Badges */}
+          <div className="flex flex-wrap gap-2 mb-4">
+            <span className={`px-3 py-1 rounded-full text-xs font-medium ${colorClass}`}>{p.type}</span>
+            <span className="px-3 py-1 rounded-full text-xs font-medium bg-yellow-50 text-yellow-700">Grades {p.grades}</span>
+            <span className="px-3 py-1 rounded-full text-xs font-medium bg-gray-50 text-gray-600">{p.mode}</span>
+            {p.isNew && !expired && <span className="px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700">NEW</span>}
+            {expired && <span className="px-3 py-1 rounded-full text-xs font-medium bg-gray-200 text-gray-400">Expired</span>}
+          </div>
+
+          <h1 className="text-xl font-bold text-gray-900 mb-1">{p.title}</h1>
+          {p.organisation && <p className="text-sm text-gray-500 mb-4">{p.organisation}</p>}
+
+          {p.imageUrl && (
+            <div className="mb-4 rounded-lg overflow-hidden">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={p.imageUrl} alt={p.title} className="w-full object-cover max-h-56" />
+            </div>
+          )}
+
+          {/* Info grid */}
+          <div className="grid grid-cols-2 gap-2 mb-4 text-sm">
+            {p.date && <div className="bg-gray-50 rounded-lg p-3"><p className="text-xs text-gray-400">Date</p><p>{p.date}</p></div>}
+            {p.deadline && <div className="bg-red-50 rounded-lg p-3"><p className="text-xs text-red-400">Deadline</p><p className="text-red-700">{p.deadline}</p></div>}
+            {(p.venue || p.location) && <div className="bg-gray-50 rounded-lg p-3"><p className="text-xs text-gray-400">Location</p><p>{p.venue || p.location}</p></div>}
+            {p.time && <div className="bg-gray-50 rounded-lg p-3"><p className="text-xs text-gray-400">Time</p><p>{p.time}</p></div>}
+            {p.eligibility && <div className="bg-gray-50 rounded-lg p-3 col-span-2"><p className="text-xs text-gray-400">Eligibility</p><p>{p.eligibility || p.audience}</p></div>}
+          </div>
+
+          <p className="text-gray-700 text-sm leading-relaxed mb-4">{p.overview}</p>
+
+          {p.instructions && (
+            <div className="mb-4 bg-yellow-50 rounded-lg p-4 border border-yellow-100">
+              <p className="text-xs font-semibold text-yellow-800 mb-1 uppercase tracking-wide">How to Apply</p>
+              <p className="text-sm text-yellow-900 whitespace-pre-line">{p.instructions}</p>
+            </div>
+          )}
+
+          {/* Action buttons */}
+          <div className="flex flex-wrap gap-2">
+            {hasRegLink && !expired && !isVideoOnly && (
+              <span className="px-4 py-2 rounded-lg bg-yellow-400 text-yellow-900 text-sm font-semibold">Register →</span>
+            )}
+            {(hasRegLink && expired) || (isVideoOnly && !expired) ? (
+              <span className="px-4 py-2 rounded-lg bg-yellow-400 text-yellow-900 text-sm font-semibold">View →</span>
+            ) : null}
+            <span className="px-3 py-2 rounded-lg border border-gray-200 text-xs text-gray-500">📅 Calendar</span>
+            <span className="px-3 py-2 rounded-lg border border-gray-200 text-xs text-gray-500">Share</span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -385,12 +577,13 @@ function NewBulletinModal({ onCancel, onCreate }: {
 
 // ─── program editor ───────────────────────────────────────────────────────────
 
-function ProgramEditor({ program, bulletinId, isNew, onCancel, onSave }: {
+function ProgramEditor({ program, bulletinId, isNew, onCancel, onSave, onPreview }: {
   program: Program;
   bulletinId: string;
   isNew: boolean;
   onCancel: () => void;
   onSave: (p: Program) => void;
+  onPreview: (p: Program) => void;
 }) {
   const [form, setForm] = useState<Program>(program);
   const [extracting, setExtracting] = useState(false);
@@ -398,6 +591,9 @@ function ProgramEditor({ program, bulletinId, isNew, onCancel, onSave }: {
   const [uploading, setUploading] = useState<string | null>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
   const extractInputRef = useRef<HTMLInputElement>(null);
+
+  // suppress unused warning
+  void imageInputRef;
 
   const set = <K extends keyof Program>(key: K, value: Program[K]) =>
     setForm((f) => ({ ...f, [key]: value }));
@@ -443,7 +639,7 @@ function ProgramEditor({ program, bulletinId, isNew, onCancel, onSave }: {
         instructions: data.instructions || f.instructions,
         tags: data.tags?.length ? data.tags : f.tags,
       }));
-      setExtractMsg("Fields filled from image — review and save.");
+      setExtractMsg("Fields filled — review and save.");
     } catch (e: unknown) {
       setExtractMsg("Extraction failed: " + (e instanceof Error ? e.message : String(e)));
     } finally {
@@ -471,10 +667,9 @@ function ProgramEditor({ program, bulletinId, isNew, onCancel, onSave }: {
   return (
     <div className="fixed inset-0 bg-black/40 flex items-start justify-center p-4 z-50 overflow-y-auto">
       <div className="bg-white rounded-xl p-6 w-full max-w-2xl my-8">
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
           <h3 className="font-semibold text-gray-900">{isNew ? "Add opportunity" : "Edit opportunity"}</h3>
-          {/* AI extract */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             {extractMsg && <span className="text-xs text-gray-500">{extractMsg}</span>}
             <button
               onClick={() => extractInputRef.current?.click()}
@@ -488,13 +683,18 @@ function ProgramEditor({ program, bulletinId, isNew, onCancel, onSave }: {
               type="file"
               accept="image/*"
               className="hidden"
-              onChange={(e) => { const f = e.target.files?.[0]; if (f) handleAiExtract(f); }}
+              onChange={(e) => { const fi = e.target.files?.[0]; if (fi) handleAiExtract(fi); }}
             />
+            <button
+              onClick={() => onPreview(form)}
+              className="px-3 py-1.5 rounded-lg bg-gray-50 border border-gray-200 text-xs text-gray-700 hover:bg-gray-100"
+            >
+              👁 Preview
+            </button>
           </div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {/* Core fields */}
           <div className="sm:col-span-2">
             <label className={l}>Title *</label>
             <input className={f} value={form.title} onChange={(e) => set("title", e.target.value)} autoFocus />
@@ -600,7 +800,7 @@ function ProgramEditor({ program, bulletinId, isNew, onCancel, onSave }: {
             </label>
           </div>
 
-          {/* Phase 2 fields ─────────────────────────────────── */}
+          {/* Media & extras */}
           <div className="sm:col-span-2 pt-3 border-t border-gray-100">
             <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Media & extras</p>
           </div>
@@ -613,6 +813,7 @@ function ProgramEditor({ program, bulletinId, isNew, onCancel, onSave }: {
             <input className={f} value={form.imageUrl || ""} placeholder="https://…"
               onChange={(e) => set("imageUrl", e.target.value)} />
             {form.imageUrl && (
+              // eslint-disable-next-line @next/next/no-img-element
               <img src={form.imageUrl} alt="" className="mt-2 h-24 rounded-lg object-cover border border-gray-100" />
             )}
           </div>
@@ -621,6 +822,7 @@ function ProgramEditor({ program, bulletinId, isNew, onCancel, onSave }: {
             <label className={l}>Video Link (YouTube / Drive)</label>
             <input className={f} value={form.videoLink || ""} placeholder="https://…"
               onChange={(e) => set("videoLink", e.target.value)} />
+            <p className="text-[11px] text-gray-400 mt-1">If set, students will see a "View →" button linking here.</p>
           </div>
 
           <div>
@@ -654,19 +856,27 @@ function ProgramEditor({ program, bulletinId, isNew, onCancel, onSave }: {
                 className="rounded"
               />
               Mark as <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-green-100 text-green-700">NEW</span>
-              (badge disappears once the event has passed)
+              (manually controlled — does not change based on upload date)
             </label>
           </div>
         </div>
 
-        <div className="flex justify-end gap-2 mt-6 pt-4 border-t border-gray-100">
-          <button onClick={onCancel} className="px-4 py-2 text-sm text-gray-600">Cancel</button>
+        <div className="flex justify-between items-center mt-6 pt-4 border-t border-gray-100">
           <button
-            onClick={() => onSave(form)}
-            className="px-5 py-2 bg-yellow-400 text-yellow-900 rounded-lg text-sm font-semibold hover:bg-yellow-500"
+            onClick={() => onPreview(form)}
+            className="px-4 py-2 rounded-lg border border-gray-200 text-sm text-gray-600 hover:bg-gray-50"
           >
-            Save
+            👁 Preview
           </button>
+          <div className="flex gap-2">
+            <button onClick={onCancel} className="px-4 py-2 text-sm text-gray-600">Cancel</button>
+            <button
+              onClick={() => onSave(form)}
+              className="px-5 py-2 bg-yellow-400 text-yellow-900 rounded-lg text-sm font-semibold hover:bg-yellow-500"
+            >
+              Save & publish
+            </button>
+          </div>
         </div>
       </div>
     </div>

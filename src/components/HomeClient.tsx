@@ -2,7 +2,7 @@
 import { useState, useMemo } from "react";
 import ProgramCard from "@/components/ProgramCard";
 import FilterBar, { FilterState } from "@/components/FilterBar";
-import { Bulletin, eligibilityGroup, matchesDeadlineFilter } from "@/lib/programs";
+import { Bulletin, eligibilityGroup, matchesDeadlineFilter, isExpired } from "@/lib/programs";
 
 const EMPTY_FILTERS: FilterState = {
   search: "",
@@ -57,6 +57,8 @@ export default function HomeClient({ bulletins }: { bulletins: Bulletin[] }) {
 
   const filtered = useMemo(() => {
     return programs.filter((p) => {
+      // hide expired unless the user explicitly filters for them
+      if (filters.deadline !== "expired" && isExpired(p)) return false;
       if (filters.category && p.category !== filters.category) return false;
       if (filters.type && p.type !== filters.type) return false;
       if (filters.format && p.mode !== filters.format) return false;

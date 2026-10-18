@@ -44,6 +44,8 @@ export default function ProgramPageClient({ program }: { program: Program | null
   const expired = isExpired(program);
   const colorClass = typeColors[program.type] || "bg-gray-100 text-gray-700";
   const hasRealLink = hasRealRegistrationLink(program);
+  const hasVideo = !!program.videoLink;
+  const isVideoOnly = hasVideo && !hasRealLink;
   const showNew = program.isNew && !expired;
 
   const handleShare = async () => {
@@ -191,7 +193,7 @@ export default function ProgramPageClient({ program }: { program: Program | null
 
         {/* Actions */}
         <div className="flex flex-wrap items-center gap-2 mb-6">
-          {hasRealLink && !expired && (
+          {hasRealLink && !expired && !isVideoOnly && (
             <a
               href={program.registrationLink}
               target="_blank"
@@ -207,6 +209,16 @@ export default function ProgramPageClient({ program }: { program: Program | null
               target="_blank"
               rel="noopener noreferrer"
               className="px-5 py-2.5 rounded-lg border border-gray-200 text-gray-500 text-sm font-semibold hover:bg-gray-50 transition-colors"
+            >
+              View &rarr;
+            </a>
+          )}
+          {isVideoOnly && !expired && (
+            <a
+              href={program.videoLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-5 py-2.5 rounded-lg bg-yellow-400 text-yellow-900 text-sm font-semibold hover:bg-yellow-500 transition-colors"
             >
               View &rarr;
             </a>

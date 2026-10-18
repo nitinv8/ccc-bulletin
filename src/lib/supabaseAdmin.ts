@@ -68,6 +68,33 @@ export async function adminArchiveProgram(id: string) {
   if (error) throw error;
 }
 
+export async function adminRestoreProgram(id: string) {
+  const { error } = await supabase
+    .from("programs")
+    .update({ admin_archived: false })
+    .eq("id", id);
+  if (error) throw error;
+}
+
+export async function adminDeleteProgram(id: string) {
+  const { error } = await supabase
+    .from("programs")
+    .delete()
+    .eq("id", id);
+  if (error) throw error;
+}
+
+export async function adminGetArchivedPrograms(bulletinId: string) {
+  const { data, error } = await supabase
+    .from("programs")
+    .select("*")
+    .eq("bulletin_id", bulletinId)
+    .eq("admin_archived", true)
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return data ?? [];
+}
+
 // ——— Storage ———
 
 export async function uploadFile(file: File): Promise<string> {

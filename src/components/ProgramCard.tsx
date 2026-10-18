@@ -73,6 +73,8 @@ export default function ProgramCard({
   const urgency = deadlineUrgency(program);
   const expired = isExpired(program);
   const hasRealLink = hasRealRegistrationLink(program);
+  const hasVideo = !!program.videoLink;
+  const isVideoOnly = hasVideo && !hasRealLink;
   const showNew = program.isNew && !expired;
 
   const handleShare = async (e: React.MouseEvent) => {
@@ -183,7 +185,8 @@ export default function ProgramCard({
 
       {/* Action row */}
       <div className="flex flex-wrap items-center gap-2 pt-3 border-t border-gray-100">
-        {hasRealLink && !expired && (
+        {/* Register: real link, not expired, not video-only */}
+        {hasRealLink && !expired && !isVideoOnly && (
           <a
             href={program.registrationLink}
             target="_blank"
@@ -194,6 +197,7 @@ export default function ProgramCard({
             Register →
           </a>
         )}
+        {/* View (expired registration link) */}
         {hasRealLink && expired && (
           <a
             href={program.registrationLink}
@@ -201,6 +205,18 @@ export default function ProgramCard({
             rel="noopener noreferrer"
             onClick={(e) => e.stopPropagation()}
             className="px-3.5 py-1.5 rounded-lg border border-gray-200 text-gray-500 text-xs font-medium hover:bg-gray-50 transition-colors"
+          >
+            View →
+          </a>
+        )}
+        {/* View (video-only program, links to video) */}
+        {isVideoOnly && !expired && (
+          <a
+            href={program.videoLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="px-3.5 py-1.5 rounded-lg bg-yellow-400 text-yellow-900 text-xs font-semibold hover:bg-yellow-500 transition-colors shadow-sm"
           >
             View →
           </a>
