@@ -405,6 +405,12 @@ function AdminDashboard() {
                     >
                       Archive
                     </button>
+                    <button
+                      onClick={() => handleDelete(p.id, p.title)}
+                      className="px-3 py-1.5 rounded-lg border border-red-200 text-xs text-red-600 hover:bg-red-50"
+                    >
+                      Delete
+                    </button>
                   </>
                 )}
                 {tab === "archived" && (

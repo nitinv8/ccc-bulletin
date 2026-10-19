@@ -49,6 +49,16 @@ export default function Header() {
           >
             About
           </Link>
+          <Link
+            href="/admin"
+            className={`px-3.5 py-1.5 rounded-full text-sm font-medium transition-colors ${
+              isActive("/admin")
+                ? "bg-yellow-400 text-yellow-900 shadow-sm"
+                : "text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+            }`}
+          >
+            Admin
+          </Link>
         </nav>
       </div>
     </header>
