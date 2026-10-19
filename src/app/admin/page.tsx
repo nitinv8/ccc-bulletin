@@ -592,14 +592,7 @@ function ProgramEditor({ program, bulletinId, isNew, onCancel, onSave, onPreview
   onPreview: (p: Program) => void;
 }) {
   const [form, setForm] = useState<Program>(program);
-  const [extracting, setExtracting] = useState(false);
-  const [extractMsg, setExtractMsg] = useState("");
   const [uploading, setUploading] = useState<string | null>(null);
-  const imageInputRef = useRef<HTMLInputElement>(null);
-  const extractInputRef = useRef<HTMLInputElement>(null);
-
-  // suppress unused warning
-  void imageInputRef;
 
   const set = <K extends keyof Program>(key: K, value: Program[K]) =>
     setForm((f) => ({ ...f, [key]: value }));
@@ -618,43 +611,7 @@ function ProgramEditor({ program, bulletinId, isNew, onCancel, onSave, onPreview
     }
   };
 
-  const handleAiExtract = async (file: File) => {
-    setExtracting(true);
-    setExtractMsg("Extracting details from image…");
-    try {
-      const fd = new FormData();
-      fd.append("image", file);
-      const res = await fetch("/api/ai-extract", { method: "POST", body: fd });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = await res.json();
-      setForm((f) => ({
-        ...f,
-        title: data.title || f.title,
-        organisation: data.organisation || f.organisation,
-        overview: data.overview || f.overview,
-        date: data.date || f.date,
-        deadline: data.deadline || f.deadline,
-        time: data.time || f.time,
-        location: data.location || f.location,
-        grades: data.grades || f.grades,
-        eligibility: data.eligibility || f.eligibility,
-        audience: data.eligibility || f.audience,
-        registrationLink: data.registrationLink || f.registrationLink,
-        type: data.type || f.type,
-        mode: data.mode || f.mode,
-        instructions: data.instructions || f.instructions,
-        tags: data.tags?.length ? data.tags : f.tags,
-      }));
-      setExtractMsg("Fields filled — review and save.");
-    } catch (e: unknown) {
-      setExtractMsg("Extraction failed: " + (e instanceof Error ? e.message : String(e)));
-    } finally {
-      setExtracting(false);
-      setTimeout(() => setExtractMsg(""), 5000);
-    }
-  };
-
-  const f = "w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400";
+  const f ="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400";
   const l = "text-xs text-gray-500 font-medium";
 
   const UploadBtn = ({ field, label }: { field: "imageUrl" | "qrCodeUrl" | "brochureUrl"; label: string }) => (
@@ -676,21 +633,6 @@ function ProgramEditor({ program, bulletinId, isNew, onCancel, onSave, onPreview
         <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
           <h3 className="font-semibold text-gray-900">{isNew ? "Add opportunity" : "Edit opportunity"}</h3>
           <div className="flex items-center gap-2 flex-wrap">
-            {extractMsg && <span className="text-xs text-gray-500">{extractMsg}</span>}
-            <button
-              onClick={() => extractInputRef.current?.click()}
-              disabled={extracting}
-              className="px-3 py-1.5 rounded-lg bg-purple-50 border border-purple-200 text-xs text-purple-700 font-medium hover:bg-purple-100 disabled:opacity-50"
-            >
-              {extracting ? "Extracting…" : "✨ Extract from image"}
-            </button>
-            <input
-              ref={extractInputRef}
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={(e) => { const fi = e.target.files?.[0]; if (fi) handleAiExtract(fi); }}
-            />
             <button
               onClick={() => onPreview(form)}
               className="px-3 py-1.5 rounded-lg bg-gray-50 border border-gray-200 text-xs text-gray-700 hover:bg-gray-100"
