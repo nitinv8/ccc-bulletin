@@ -119,7 +119,7 @@ export default function ProgramPageClient({ program }: { program: Program | null
         {/* Program image */}
         {program.imageUrl && (
           <div className="mb-6 rounded-lg overflow-hidden">
-            <img src={program.imageUrl} alt={program.title} className="w-full object-cover max-h-72" />
+            <img src={program.imageUrl} alt={program.title} className="w-full object-contain" />
           </div>
         )}
 
