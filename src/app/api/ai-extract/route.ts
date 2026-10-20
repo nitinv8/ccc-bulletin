@@ -1,4 +1,4 @@
-import Anthropic from "@anthropic-ai/sdk";
+import { generateText, gateway } from "ai";
 import { NextRequest, NextResponse } from "next/server";
 
 const PROMPT = `You are helping students at a school find opportunities. From this image, extract event details and return ONLY a JSON object with these fields:
@@ -32,8 +32,8 @@ Rules:
 - Return ONLY the JSON, no other text`;
 
 export async function POST(req: NextRequest) {
-  if (!process.env.ANTHROPIC_API_KEY) {
-    return NextResponse.json({ error: "ANTHROPIC_API_KEY not configured" }, { status: 503 });
+  if (!process.env.AI_GATEWAY_API_KEY) {
+    return NextResponse.json({ error: "AI_GATEWAY_API_KEY not configured" }, { status: 503 });
   }
 
   const formData = await req.formData();
@@ -44,26 +44,23 @@ export async function POST(req: NextRequest) {
 
   const bytes = await file.arrayBuffer();
   const base64 = Buffer.from(bytes).toString("base64");
-  const mediaType = (file.type || "image/jpeg") as "image/jpeg" | "image/png" | "image/gif" | "image/webp";
+  const mediaType = (file.type || "image/jpeg") as string;
 
   try {
-    const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-    const message = await client.messages.create({
-      model: "claude-haiku-4-5",
-      max_tokens: 1024,
+    const { text } = await generateText({
+      model: gateway("anthropic/claude-haiku-4-5"),
       messages: [
         {
           role: "user",
           content: [
-            { type: "image", source: { type: "base64", media_type: mediaType, data: base64 } },
+            { type: "file", data: Buffer.from(base64, "base64"), mediaType },
             { type: "text", text: PROMPT },
           ],
         },
       ],
     });
 
-    const result = message.content[0].type === "text" ? message.content[0].text : "";
-    const clean = result.replace(/^```(?:json)?\n?/, "").replace(/\n?```$/, "").trim();
+    const clean = text.replace(/^```(?:json)?\n?/, "").replace(/\n?```$/, "").trim();
     try {
       return NextResponse.json(JSON.parse(clean));
     } catch {

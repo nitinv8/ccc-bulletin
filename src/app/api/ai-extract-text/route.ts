@@ -1,4 +1,4 @@
-import Anthropic from "@anthropic-ai/sdk";
+import { generateText, gateway } from "ai";
 import { NextRequest, NextResponse } from "next/server";
 
 const PROMPT = `You are helping students at a school find opportunities. From the text below, extract event details and return ONLY a JSON object with these fields:
@@ -34,8 +34,8 @@ Rules:
 Event text:`;
 
 export async function POST(req: NextRequest) {
-  if (!process.env.ANTHROPIC_API_KEY) {
-    return NextResponse.json({ error: "ANTHROPIC_API_KEY not configured" }, { status: 503 });
+  if (!process.env.AI_GATEWAY_API_KEY) {
+    return NextResponse.json({ error: "AI_GATEWAY_API_KEY not configured" }, { status: 503 });
   }
 
   const { text } = await req.json();
@@ -44,14 +44,11 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-    const message = await client.messages.create({
-      model: "claude-haiku-4-5",
-      max_tokens: 1024,
+    const { text: result } = await generateText({
+      model: gateway("anthropic/claude-haiku-4-5"),
       messages: [{ role: "user", content: `${PROMPT}\n\n${text}` }],
     });
 
-    const result = message.content[0].type === "text" ? message.content[0].text : "";
     const clean = result.replace(/^```(?:json)?\n?/, "").replace(/\n?```$/, "").trim();
     try {
       return NextResponse.json(JSON.parse(clean));
