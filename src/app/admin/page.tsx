@@ -593,6 +593,18 @@ function NewBulletinModal({ onCancel, onCreate }: {
 
 // ─── program editor ───────────────────────────────────────────────────────────
 
+type EditorStep = "input" | "form";
+type InputMode = "text" | "image";
+
+function SectionHeader({ title }: { title: string }) {
+  return (
+    <div className="col-span-2 flex items-center gap-3 pt-2">
+      <p className="text-xs font-bold text-gray-400 uppercase tracking-widest whitespace-nowrap">{title}</p>
+      <div className="flex-1 h-px bg-gray-100" />
+    </div>
+  );
+}
+
 function ProgramEditor({ program, bulletinId, isNew, onCancel, onSave, onPreview }: {
   program: Program;
   bulletinId: string;
@@ -601,18 +613,70 @@ function ProgramEditor({ program, bulletinId, isNew, onCancel, onSave, onPreview
   onSave: (p: Program) => void;
   onPreview: (p: Program) => void;
 }) {
-  const [form, setForm] = useState<Program>(program);
-  const [uploading, setUploading] = useState<string | null>(null);
+  const [step, setStep] = useState<EditorStep>(isNew ? "input" : "form");
+  const [inputMode, setInputMode] = useState<InputMode>("text");
+  const [pasteText, setPasteText] = useState("");
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState("");
   const [extracting, setExtracting] = useState(false);
   const [extractMsg, setExtractMsg] = useState("");
-  const extractInputRef = useRef<HTMLInputElement>(null);
-  const [pasteText, setPasteText] = useState("");
-  const [showPasteBox, setShowPasteBox] = useState(false);
+  const [form, setForm] = useState<Program>(program);
+  const [uploading, setUploading] = useState<string | null>(null);
+  const imageInputRef = useRef<HTMLInputElement>(null);
 
   const set = <K extends keyof Program>(key: K, value: Program[K]) =>
     setForm((f) => ({ ...f, [key]: value }));
-
   const tagsStr = useMemo(() => form.tags.join(", "), [form.tags]);
+
+  const applyExtracted = (data: Record<string, unknown>, prev: Program): Program => ({
+    ...prev,
+    title: (data.title as string) || prev.title,
+    organisation: (data.organisation as string) || prev.organisation,
+    overview: (data.overview as string) || prev.overview,
+    date: (data.date as string) || prev.date,
+    deadline: (data.deadline as string) || prev.deadline,
+    time: (data.time as string) || prev.time,
+    location: (data.location as string) || prev.location,
+    grades: (data.grades as string) || prev.grades,
+    eligibility: (data.eligibility as string) || prev.eligibility,
+    audience: (data.eligibility as string) || prev.audience,
+    registrationLink: (data.registrationLink as string) || prev.registrationLink,
+    type: (data.type as string) || prev.type,
+    mode: (data.mode as string) || prev.mode,
+    instructions: (data.instructions as string) || prev.instructions,
+    tags: (data.tags as string[])?.length ? (data.tags as string[]) : prev.tags,
+  });
+
+  const handleProcess = async () => {
+    setExtracting(true);
+    setExtractMsg("");
+    try {
+      let data: Record<string, unknown>;
+      if (inputMode === "text") {
+        const res = await fetch("/api/ai-extract-text", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text: pasteText }),
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        data = await res.json();
+      } else {
+        if (!imageFile) return;
+        const fd = new FormData();
+        fd.append("image", imageFile);
+        const res = await fetch("/api/ai-extract", { method: "POST", body: fd });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        data = await res.json();
+      }
+      setForm((prev) => applyExtracted(data, prev));
+      setStep("form");
+      setExtractMsg("Fields filled — review and save.");
+    } catch (e: unknown) {
+      setExtractMsg("Extraction failed: " + (e instanceof Error ? e.message : String(e)));
+    } finally {
+      setExtracting(false);
+    }
+  };
 
   const handleFileUpload = async (file: File, field: "imageUrl" | "qrCodeUrl" | "brochureUrl") => {
     setUploading(field);
@@ -626,349 +690,339 @@ function ProgramEditor({ program, bulletinId, isNew, onCancel, onSave, onPreview
     }
   };
 
-  const handleAiExtract = async (file: File) => {
-    setExtracting(true);
-    setExtractMsg("Extracting details from image…");
-    try {
-      const fd = new FormData();
-      fd.append("image", file);
-      const res = await fetch("/api/ai-extract", { method: "POST", body: fd });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = await res.json();
-      setForm((prev) => ({
-        ...prev,
-        title: data.title || prev.title,
-        organisation: data.organisation || prev.organisation,
-        overview: data.overview || prev.overview,
-        date: data.date || prev.date,
-        deadline: data.deadline || prev.deadline,
-        time: data.time || prev.time,
-        location: data.location || prev.location,
-        grades: data.grades || prev.grades,
-        eligibility: data.eligibility || prev.eligibility,
-        audience: data.eligibility || prev.audience,
-        registrationLink: data.registrationLink || prev.registrationLink,
-        type: data.type || prev.type,
-        mode: data.mode || prev.mode,
-        instructions: data.instructions || prev.instructions,
-        tags: data.tags?.length ? data.tags : prev.tags,
-      }));
-      setExtractMsg("Fields filled — review and save.");
-    } catch (e: unknown) {
-      setExtractMsg("Extraction failed: " + (e instanceof Error ? e.message : String(e)));
-    } finally {
-      setExtracting(false);
-      setTimeout(() => setExtractMsg(""), 5000);
-    }
-  };
-
-  const handleTextExtract = async () => {
-    if (!pasteText.trim()) return;
-    setExtracting(true);
-    setExtractMsg("Extracting details from text…");
-    try {
-      const res = await fetch("/api/ai-extract-text", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: pasteText }),
-      });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = await res.json();
-      setForm((prev) => ({
-        ...prev,
-        title: data.title || prev.title,
-        organisation: data.organisation || prev.organisation,
-        overview: data.overview || prev.overview,
-        date: data.date || prev.date,
-        deadline: data.deadline || prev.deadline,
-        time: data.time || prev.time,
-        location: data.location || prev.location,
-        grades: data.grades || prev.grades,
-        eligibility: data.eligibility || prev.eligibility,
-        audience: data.eligibility || prev.audience,
-        registrationLink: data.registrationLink || prev.registrationLink,
-        type: data.type || prev.type,
-        mode: data.mode || prev.mode,
-        instructions: data.instructions || prev.instructions,
-        tags: data.tags?.length ? data.tags : prev.tags,
-      }));
-      setExtractMsg("Fields filled — review and save.");
-      setPasteText("");
-      setShowPasteBox(false);
-    } catch (e: unknown) {
-      setExtractMsg("Extraction failed: " + (e instanceof Error ? e.message : String(e)));
-    } finally {
-      setExtracting(false);
-      setTimeout(() => setExtractMsg(""), 5000);
-    }
-  };
-
-  const f ="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400";
-  const l = "text-xs text-gray-500 font-medium";
+  const f = "w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400";
+  const l = "block text-xs text-gray-500 font-medium mb-1";
 
   const UploadBtn = ({ field, label }: { field: "imageUrl" | "qrCodeUrl" | "brochureUrl"; label: string }) => (
     <label className="cursor-pointer text-xs text-yellow-700 hover:underline ml-2">
       {uploading === field ? "Uploading…" : label}
       <input
-        type="file"
-        accept="image/*,application/pdf"
-        className="hidden"
-        disabled={!!uploading}
+        type="file" accept="image/*,application/pdf" className="hidden" disabled={!!uploading}
         onChange={(e) => { const file = e.target.files?.[0]; if (file) handleFileUpload(file, field); }}
       />
     </label>
   );
 
+  const canProcess = inputMode === "text" ? pasteText.trim().length > 0 : imageFile !== null;
+
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-start justify-center p-4 z-50 overflow-y-auto">
-      <div className="bg-white rounded-xl p-6 w-full max-w-2xl my-8">
-        <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
-          <h3 className="font-semibold text-gray-900">{isNew ? "Add opportunity" : "Edit opportunity"}</h3>
-          <div className="flex items-center gap-2 flex-wrap">
-            {extractMsg && <span className="text-xs text-gray-500">{extractMsg}</span>}
-            <button
-              onClick={() => setShowPasteBox((v) => !v)}
-              disabled={extracting}
-              className="px-3 py-1.5 rounded-lg bg-blue-50 border border-blue-200 text-xs text-blue-700 font-medium hover:bg-blue-100 disabled:opacity-50"
-            >
-              ✏️ Paste text
-            </button>
-            <button
-              onClick={() => extractInputRef.current?.click()}
-              disabled={extracting}
-              className="px-3 py-1.5 rounded-lg bg-purple-50 border border-purple-200 text-xs text-purple-700 font-medium hover:bg-purple-100 disabled:opacity-50"
-            >
-              {extracting ? "Extracting…" : "✨ Extract from image"}
-            </button>
-            <input
-              ref={extractInputRef}
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={(e) => { const fi = e.target.files?.[0]; if (fi) handleAiExtract(fi); }}
-            />
-            <button
-              onClick={() => onPreview(form)}
-              className="px-3 py-1.5 rounded-lg bg-gray-50 border border-gray-200 text-xs text-gray-700 hover:bg-gray-100"
-            >
-              👁 Preview
-            </button>
-          </div>
-        </div>
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl flex flex-col w-[78vw] max-w-5xl" style={{ height: "82vh" }}>
 
-        {/* Paste text box for AI auto-fill */}
-        {showPasteBox && (
-          <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-            <p className="text-xs font-semibold text-blue-800 mb-2">Paste event information — AI will fill the form</p>
-            <textarea
-              value={pasteText}
-              onChange={(e) => setPasteText(e.target.value)}
-              placeholder="Paste any text about the event: email, brochure text, website copy…"
-              rows={5}
-              className="w-full px-3 py-2 rounded-lg border border-blue-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none"
-              autoFocus
-            />
-            <div className="flex justify-end gap-2 mt-2">
+        {/* Fixed header */}
+        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 shrink-0">
+          <div className="flex items-center gap-3">
+            <h3 className="font-semibold text-gray-900 text-base">
+              {isNew ? "Add opportunity" : "Edit opportunity"}
+            </h3>
+            {step === "form" && isNew && (
               <button
-                onClick={() => { setShowPasteBox(false); setPasteText(""); }}
-                className="px-3 py-1.5 text-xs text-gray-500 hover:text-gray-700"
+                onClick={() => setStep("input")}
+                className="text-xs text-gray-400 hover:text-gray-600 flex items-center gap-1"
               >
-                Cancel
+                ← Change input
               </button>
-              <button
-                onClick={handleTextExtract}
-                disabled={extracting || !pasteText.trim()}
-                className="px-4 py-1.5 rounded-lg bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700 disabled:opacity-50"
-              >
-                {extracting ? "Extracting…" : "Auto-fill form"}
-              </button>
-            </div>
-          </div>
-        )}
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="sm:col-span-2">
-            <label className={l}>Title *</label>
-            <input className={f} value={form.title} onChange={(e) => set("title", e.target.value)} autoFocus />
-          </div>
-
-          <div>
-            <label className={l}>Type</label>
-            <select className={f} value={form.type} onChange={(e) => set("type", e.target.value)}>
-              {TYPE_OPTIONS.map((t) => <option key={t}>{t}</option>)}
-            </select>
-          </div>
-          <div>
-            <label className={l}>Category</label>
-            <select className={f} value={form.category} onChange={(e) => set("category", e.target.value)}>
-              {CATEGORY_OPTIONS.map((c) => <option key={c.key} value={c.key}>{c.label}</option>)}
-            </select>
-          </div>
-
-          <div>
-            <label className={l}>Organisation</label>
-            <input className={f} value={form.organisation || ""} onChange={(e) => set("organisation", e.target.value)} />
-          </div>
-          <div>
-            <label className={l}>Grades (e.g. 9-12)</label>
-            <input className={f} value={form.grades} onChange={(e) => set("grades", e.target.value)} />
-          </div>
-
-          <div className="sm:col-span-2">
-            <label className={l}>Eligibility / Audience</label>
-            <input
-              className={f} value={form.eligibility || form.audience}
-              onChange={(e) => { set("eligibility", e.target.value); set("audience", e.target.value); }}
-            />
-          </div>
-
-          <div className="sm:col-span-2">
-            <label className={l}>Description / Overview</label>
-            <textarea className={f} rows={3} value={form.overview} onChange={(e) => set("overview", e.target.value)} />
-          </div>
-
-          <div>
-            <label className={l}>Format</label>
-            <select className={f} value={form.mode} onChange={(e) => set("mode", e.target.value)}>
-              {MODE_OPTIONS.map((m) => <option key={m}>{m}</option>)}
-            </select>
-          </div>
-          <div>
-            <label className={l}>Location</label>
-            <input className={f} value={form.location || ""} onChange={(e) => set("location", e.target.value)} />
-          </div>
-
-          <div>
-            <label className={l}>Venue (if in-person)</label>
-            <input className={f} value={form.venue || ""} onChange={(e) => set("venue", e.target.value)} />
-          </div>
-          <div>
-            <label className={l}>Campus</label>
-            <input className={f} value={form.campus} onChange={(e) => set("campus", e.target.value)} />
-          </div>
-
-          <div>
-            <label className={l}>Date (display)</label>
-            <input className={f} value={form.date || ""} onChange={(e) => set("date", e.target.value)} />
-          </div>
-          <div>
-            <label className={l}>Date ISO (calendar/sort)</label>
-            <input type="date" className={f} value={form.dateISO || ""} onChange={(e) => set("dateISO", e.target.value)} />
-          </div>
-
-          <div>
-            <label className={l}>Deadline (display)</label>
-            <input className={f} value={form.deadline || ""} onChange={(e) => set("deadline", e.target.value)} />
-          </div>
-          <div>
-            <label className={l}>Deadline ISO (expiry)</label>
-            <input type="date" className={f} value={form.deadlineDate || ""} onChange={(e) => set("deadlineDate", e.target.value)} />
-          </div>
-
-          <div>
-            <label className={l}>Time</label>
-            <input className={f} value={form.time || ""} onChange={(e) => set("time", e.target.value)} />
-          </div>
-          <div>
-            <label className={l}>Tags (comma separated)</label>
-            <input
-              className={f} value={tagsStr}
-              onChange={(e) => set("tags", e.target.value.split(",").map((t) => t.trim()).filter(Boolean))}
-            />
-          </div>
-
-          <div className="sm:col-span-2">
-            <label className={l}>Registration Link</label>
-            <input
-              className={f} value={form.registrationLink || ""} placeholder="https://…"
-              onChange={(e) => set("registrationLink", e.target.value)}
-            />
-            <label className="flex items-center gap-2 mt-1.5 text-xs text-gray-500">
-              <input
-                type="checkbox" checked={!!form.registrationLinkVerified}
-                onChange={(e) => set("registrationLinkVerified", e.target.checked)}
-              />
-              Verified official link
-            </label>
-          </div>
-
-          {/* Media & extras */}
-          <div className="sm:col-span-2 pt-3 border-t border-gray-100">
-            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Media & extras</p>
-          </div>
-
-          <div className="sm:col-span-2">
-            <label className={l}>
-              Poster / Image URL
-              <UploadBtn field="imageUrl" label="Upload image" />
-            </label>
-            <input className={f} value={form.imageUrl || ""} placeholder="https://…"
-              onChange={(e) => set("imageUrl", e.target.value)} />
-            {form.imageUrl && (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={form.imageUrl} alt="" className="mt-2 h-24 rounded-lg object-cover border border-gray-100" />
             )}
           </div>
-
-          <div className="sm:col-span-2">
-            <label className={l}>Video Link (YouTube / Drive)</label>
-            <input className={f} value={form.videoLink || ""} placeholder="https://…"
-              onChange={(e) => set("videoLink", e.target.value)} />
-            <p className="text-[11px] text-gray-400 mt-1">If set, students will see a "View →" button linking here.</p>
-          </div>
-
-          <div>
-            <label className={l}>
-              QR Code URL
-              <UploadBtn field="qrCodeUrl" label="Upload QR" />
-            </label>
-            <input className={f} value={form.qrCodeUrl || ""} placeholder="https://…"
-              onChange={(e) => set("qrCodeUrl", e.target.value)} />
-          </div>
-          <div>
-            <label className={l}>
-              Brochure URL
-              <UploadBtn field="brochureUrl" label="Upload PDF" />
-            </label>
-            <input className={f} value={form.brochureUrl || ""} placeholder="https://…"
-              onChange={(e) => set("brochureUrl", e.target.value)} />
-          </div>
-
-          <div className="sm:col-span-2">
-            <label className={l}>How to Apply / Instructions</label>
-            <textarea className={f} rows={3} value={form.instructions || ""}
-              onChange={(e) => set("instructions", e.target.value)} />
-          </div>
-
-          <div className="sm:col-span-2">
-            <label className="flex items-center gap-2 text-sm text-gray-700">
-              <input
-                type="checkbox" checked={!!form.isNew}
-                onChange={(e) => set("isNew", e.target.checked)}
-                className="rounded"
-              />
-              Mark as <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-green-100 text-green-700">NEW</span>
-              (manually controlled — does not change based on upload date)
-            </label>
+          <div className="flex items-center gap-2">
+            {step === "form" && extractMsg && (
+              <span className="text-xs text-green-600 font-medium">{extractMsg}</span>
+            )}
+            {step === "form" && (
+              <button
+                onClick={() => onPreview(form)}
+                className="px-3 py-1.5 rounded-lg border border-gray-200 text-xs text-gray-600 hover:bg-gray-50"
+              >
+                👁 Preview
+              </button>
+            )}
+            <button onClick={onCancel} className="text-gray-400 hover:text-gray-600 text-xl leading-none px-1">×</button>
           </div>
         </div>
 
-        <div className="flex justify-between items-center mt-6 pt-4 border-t border-gray-100">
-          <button
-            onClick={() => onPreview(form)}
-            className="px-4 py-2 rounded-lg border border-gray-200 text-sm text-gray-600 hover:bg-gray-50"
-          >
-            👁 Preview
+        {/* Scrollable body */}
+        <div className="flex-1 overflow-y-auto px-6 py-5">
+
+          {/* ── Step 1: Input ── */}
+          {step === "input" && (
+            <div className="flex flex-col items-center justify-center h-full gap-6 max-w-2xl mx-auto">
+              <div>
+                <p className="text-center text-gray-500 text-sm mb-6">
+                  Paste event details or upload a poster — AI will fill in the form for you.
+                </p>
+
+                {/* Mode toggle */}
+                <div className="flex rounded-xl border border-gray-200 overflow-hidden mb-5 w-fit mx-auto">
+                  <button
+                    onClick={() => setInputMode("text")}
+                    className={`px-6 py-2.5 text-sm font-medium transition-colors ${
+                      inputMode === "text" ? "bg-gray-900 text-white" : "text-gray-500 hover:bg-gray-50"
+                    }`}
+                  >
+                    ✏️ Paste text
+                  </button>
+                  <button
+                    onClick={() => setInputMode("image")}
+                    className={`px-6 py-2.5 text-sm font-medium transition-colors ${
+                      inputMode === "image" ? "bg-gray-900 text-white" : "text-gray-500 hover:bg-gray-50"
+                    }`}
+                  >
+                    🖼 Upload image
+                  </button>
+                </div>
+
+                {/* Text input */}
+                {inputMode === "text" && (
+                  <textarea
+                    value={pasteText}
+                    onChange={(e) => setPasteText(e.target.value)}
+                    placeholder="Paste any event information — email, brochure copy, website text, announcement…"
+                    rows={9}
+                    autoFocus
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 resize-none"
+                    style={{ minWidth: "520px" }}
+                  />
+                )}
+
+                {/* Image input */}
+                {inputMode === "image" && (
+                  <div
+                    onClick={() => imageInputRef.current?.click()}
+                    className={`w-full rounded-xl border-2 border-dashed cursor-pointer transition-colors flex flex-col items-center justify-center gap-3 ${
+                      imageFile ? "border-yellow-400 bg-yellow-50" : "border-gray-200 hover:border-gray-300 bg-gray-50"
+                    }`}
+                    style={{ minWidth: "520px", minHeight: "200px" }}
+                  >
+                    {imagePreview ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={imagePreview} alt="preview" className="max-h-48 rounded-lg object-contain" />
+                    ) : (
+                      <>
+                        <span className="text-3xl">🖼</span>
+                        <p className="text-sm text-gray-500">Click to choose an image</p>
+                        <p className="text-xs text-gray-400">PNG, JPG, WebP</p>
+                      </>
+                    )}
+                    {imageFile && (
+                      <p className="text-xs text-yellow-700 font-medium">{imageFile.name}</p>
+                    )}
+                  </div>
+                )}
+                <input
+                  ref={imageInputRef}
+                  type="file" accept="image/*" className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      setImageFile(file);
+                      setImagePreview(URL.createObjectURL(file));
+                    }
+                  }}
+                />
+
+                {extractMsg && (
+                  <p className="text-sm text-red-500 mt-3 text-center">{extractMsg}</p>
+                )}
+
+                <div className="flex justify-center mt-5">
+                  <button
+                    onClick={handleProcess}
+                    disabled={!canProcess || extracting}
+                    className="px-8 py-3 rounded-xl bg-yellow-400 text-yellow-900 text-sm font-semibold hover:bg-yellow-500 disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+                  >
+                    {extracting ? (
+                      <>
+                        <span className="animate-spin text-base">⟳</span>
+                        Processing…
+                      </>
+                    ) : (
+                      <>✨ Process with AI</>
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ── Step 2: Form ── */}
+          {step === "form" && (
+            <div className="grid grid-cols-2 gap-x-5 gap-y-4">
+
+              <SectionHeader title="Core details" />
+
+              <div className="col-span-2">
+                <label className={l}>Title *</label>
+                <input className={f} value={form.title} onChange={(e) => set("title", e.target.value)} autoFocus />
+              </div>
+              <div>
+                <label className={l}>Organisation</label>
+                <input className={f} value={form.organisation || ""} onChange={(e) => set("organisation", e.target.value)} />
+              </div>
+              <div>
+                <label className={l}>Type</label>
+                <select className={f} value={form.type} onChange={(e) => set("type", e.target.value)}>
+                  {TYPE_OPTIONS.map((t) => <option key={t}>{t}</option>)}
+                </select>
+              </div>
+              <div>
+                <label className={l}>Category</label>
+                <select className={f} value={form.category} onChange={(e) => set("category", e.target.value)}>
+                  {CATEGORY_OPTIONS.map((c) => <option key={c.key} value={c.key}>{c.label}</option>)}
+                </select>
+              </div>
+              <div>
+                <label className={l}>Grades (e.g. 9-12)</label>
+                <input className={f} value={form.grades} onChange={(e) => set("grades", e.target.value)} />
+              </div>
+              <div className="col-span-2">
+                <label className={l}>Description / Overview</label>
+                <textarea className={f} rows={3} value={form.overview} onChange={(e) => set("overview", e.target.value)} />
+              </div>
+              <div className="col-span-2">
+                <label className={l}>Eligibility / Audience</label>
+                <input className={f} value={form.eligibility || form.audience}
+                  onChange={(e) => { set("eligibility", e.target.value); set("audience", e.target.value); }} />
+              </div>
+
+              <SectionHeader title="Dates & deadline" />
+
+              <div>
+                <label className={l}>Date (display, e.g. "15 Jan 2026")</label>
+                <input className={f} value={form.date || ""} onChange={(e) => set("date", e.target.value)} />
+              </div>
+              <div>
+                <label className={l}>Date ISO (for calendar & sorting)</label>
+                <input type="date" className={f} value={form.dateISO || ""} onChange={(e) => set("dateISO", e.target.value)} />
+              </div>
+              <div>
+                <label className={l}>Deadline (display, e.g. "10 Jan 2026")</label>
+                <input className={f} value={form.deadline || ""} onChange={(e) => set("deadline", e.target.value)} />
+              </div>
+              <div>
+                <label className={l}>Deadline ISO (controls expiry)</label>
+                <input type="date" className={f} value={form.deadlineDate || ""} onChange={(e) => set("deadlineDate", e.target.value)} />
+              </div>
+              <div>
+                <label className={l}>Time</label>
+                <input className={f} value={form.time || ""} onChange={(e) => set("time", e.target.value)} />
+              </div>
+
+              <SectionHeader title="Location & format" />
+
+              <div>
+                <label className={l}>Format</label>
+                <select className={f} value={form.mode} onChange={(e) => set("mode", e.target.value)}>
+                  {MODE_OPTIONS.map((m) => <option key={m}>{m}</option>)}
+                </select>
+              </div>
+              <div>
+                <label className={l}>Location (city / country)</label>
+                <input className={f} value={form.location || ""} onChange={(e) => set("location", e.target.value)} />
+              </div>
+              <div>
+                <label className={l}>Venue (for in-person events)</label>
+                <input className={f} value={form.venue || ""} onChange={(e) => set("venue", e.target.value)} />
+              </div>
+              <div>
+                <label className={l}>Campus</label>
+                <input className={f} value={form.campus} onChange={(e) => set("campus", e.target.value)} />
+              </div>
+
+              <SectionHeader title="Registration" />
+
+              <div className="col-span-2">
+                <label className={l}>Registration Link</label>
+                <input className={f} value={form.registrationLink || ""} placeholder="https://…"
+                  onChange={(e) => set("registrationLink", e.target.value)} />
+                <label className="flex items-center gap-2 mt-1.5 text-xs text-gray-500 cursor-pointer">
+                  <input type="checkbox" checked={!!form.registrationLinkVerified}
+                    onChange={(e) => set("registrationLinkVerified", e.target.checked)} />
+                  Verified official link
+                </label>
+              </div>
+              <div className="col-span-2">
+                <label className={l}>How to Apply / Instructions</label>
+                <textarea className={f} rows={3} value={form.instructions || ""}
+                  onChange={(e) => set("instructions", e.target.value)} />
+              </div>
+              <div>
+                <label className={l}>Tags (comma separated)</label>
+                <input className={f} value={tagsStr}
+                  onChange={(e) => set("tags", e.target.value.split(",").map((t) => t.trim()).filter(Boolean))} />
+              </div>
+
+              <SectionHeader title="Media" />
+
+              <div className="col-span-2">
+                <label className={l}>
+                  Poster / Image URL
+                  <UploadBtn field="imageUrl" label="↑ Upload" />
+                </label>
+                <input className={f} value={form.imageUrl || ""} placeholder="https://…"
+                  onChange={(e) => set("imageUrl", e.target.value)} />
+                {form.imageUrl && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={form.imageUrl} alt="" className="mt-2 h-20 rounded-lg object-cover border border-gray-100" />
+                )}
+              </div>
+              <div>
+                <label className={l}>Video Link (YouTube / Drive)</label>
+                <input className={f} value={form.videoLink || ""} placeholder="https://…"
+                  onChange={(e) => set("videoLink", e.target.value)} />
+              </div>
+              <div>
+                <label className={l}>
+                  QR Code
+                  <UploadBtn field="qrCodeUrl" label="↑ Upload" />
+                </label>
+                <input className={f} value={form.qrCodeUrl || ""} placeholder="https://…"
+                  onChange={(e) => set("qrCodeUrl", e.target.value)} />
+              </div>
+              <div>
+                <label className={l}>
+                  Brochure
+                  <UploadBtn field="brochureUrl" label="↑ Upload PDF" />
+                </label>
+                <input className={f} value={form.brochureUrl || ""} placeholder="https://…"
+                  onChange={(e) => set("brochureUrl", e.target.value)} />
+              </div>
+
+              <SectionHeader title="Settings" />
+
+              <div className="col-span-2">
+                <label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+                  <input type="checkbox" checked={!!form.isNew}
+                    onChange={(e) => set("isNew", e.target.checked)} className="rounded" />
+                  Mark as{" "}
+                  <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-green-100 text-green-700">NEW</span>
+                  <span className="text-xs text-gray-400">(manually controlled)</span>
+                </label>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Fixed footer */}
+        <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-between shrink-0 bg-white rounded-b-2xl">
+          <button onClick={onCancel} className="px-4 py-2 text-sm text-gray-500 hover:text-gray-700">
+            Cancel
           </button>
-          <div className="flex gap-2">
-            <button onClick={onCancel} className="px-4 py-2 text-sm text-gray-600">Cancel</button>
-            <button
-              onClick={() => onSave(form)}
-              className="px-5 py-2 bg-yellow-400 text-yellow-900 rounded-lg text-sm font-semibold hover:bg-yellow-500"
-            >
-              Save & publish
-            </button>
-          </div>
+          {step === "form" && (
+            <div className="flex gap-2">
+              <button
+                onClick={() => onPreview(form)}
+                className="px-4 py-2 rounded-lg border border-gray-200 text-sm text-gray-600 hover:bg-gray-50"
+              >
+                👁 Preview
+              </button>
+              <button
+                onClick={() => onSave(form)}
+                className="px-6 py-2 bg-yellow-400 text-yellow-900 rounded-lg text-sm font-semibold hover:bg-yellow-500"
+              >
+                Save & publish
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
