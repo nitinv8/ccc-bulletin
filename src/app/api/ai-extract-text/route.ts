@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const { text: result } = await generateText({
-      model: gateway("anthropic/claude-haiku-5.5"),
+      model: gateway("nvidia/nemotron-3.5-lightning-free"),
       messages: [{ role: "user", content: `${PROMPT}\n\n${text}` }],
     });
 
