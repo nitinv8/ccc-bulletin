@@ -705,7 +705,7 @@ function ProgramEditor({ program, bulletinId, isNew, onCancel, onSave, onPreview
     </label>
   );
 
-  const canProcess = inputMode === "text" ? pasteText.trim().length > 0 : inputMode === "image" ? imageFile !== null : false;
+  const canProcess = inputMode === "text" ? pasteText.trim().length > 0 : imageFile !== null;
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
@@ -757,7 +757,7 @@ function ProgramEditor({ program, bulletinId, isNew, onCancel, onSave, onPreview
                 <div className="flex rounded-xl border border-gray-200 overflow-hidden mb-5 w-fit mx-auto">
                   <button
                     onClick={() => setInputMode("text")}
-                    className={`px-5 py-2.5 text-sm font-medium transition-colors ${
+                    className={`px-6 py-2.5 text-sm font-medium transition-colors ${
                       inputMode === "text" ? "bg-gray-900 text-white" : "text-gray-500 hover:bg-gray-50"
                     }`}
                   >
@@ -765,19 +765,11 @@ function ProgramEditor({ program, bulletinId, isNew, onCancel, onSave, onPreview
                   </button>
                   <button
                     onClick={() => setInputMode("image")}
-                    className={`px-5 py-2.5 text-sm font-medium transition-colors border-x border-gray-200 ${
+                    className={`px-6 py-2.5 text-sm font-medium transition-colors ${
                       inputMode === "image" ? "bg-gray-900 text-white" : "text-gray-500 hover:bg-gray-50"
                     }`}
                   >
                     🖼 Upload image
-                  </button>
-                  <button
-                    onClick={() => { setStep("form"); }}
-                    className={`px-5 py-2.5 text-sm font-medium transition-colors ${
-                      inputMode === "manual" ? "bg-gray-900 text-white" : "text-gray-500 hover:bg-gray-50"
-                    }`}
-                  >
-                    📝 Fill manually
                   </button>
                 </div>
 
@@ -834,7 +826,7 @@ function ProgramEditor({ program, bulletinId, isNew, onCancel, onSave, onPreview
                   <p className="text-sm text-red-500 mt-3 text-center">{extractMsg}</p>
                 )}
 
-                <div className="flex justify-center mt-5">
+                <div className="flex flex-col items-center gap-3 mt-5">
                   <button
                     onClick={handleProcess}
                     disabled={!canProcess || extracting}
@@ -848,6 +840,12 @@ function ProgramEditor({ program, bulletinId, isNew, onCancel, onSave, onPreview
                     ) : (
                       <>✨ Process with AI</>
                     )}
+                  </button>
+                  <button
+                    onClick={() => setStep("form")}
+                    className="text-xs text-gray-400 hover:text-gray-600 underline underline-offset-2"
+                  >
+                    or fill in manually instead →
                   </button>
                 </div>
               </div>
