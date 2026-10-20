@@ -46,12 +46,12 @@ export async function POST(req: NextRequest) {
   const mediaType = (file.type || "image/jpeg") as string;
 
   const { text } = await generateText({
-    model: gateway("anthropic/claude-haiku-4-5"),
+    model: gateway("anthropic/claude-3-5-haiku"),
     messages: [
       {
         role: "user",
         content: [
-          { type: "image", image: `data:${mediaType};base64,${base64}` },
+          { type: "file", data: `data:${mediaType};base64,${base64}`, mimeType: mediaType },
           { type: "text", text: PROMPT },
         ],
       },
