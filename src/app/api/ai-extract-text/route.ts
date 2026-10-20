@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const { text: result } = await generateText({
-      model: gateway("google/gemini-2.0-flash"),
+      model: gateway("anthropic/claude-haiku-5.5"),
       messages: [{ role: "user", content: `${PROMPT}\n\n${text}` }],
     });
 
