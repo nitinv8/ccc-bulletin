@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
       {
         role: "user",
         content: [
-          { type: "file", data: `data:${mediaType};base64,${base64}`, mimeType: mediaType },
+          { type: "file", data: Buffer.from(base64, "base64"), mediaType },
           { type: "text", text: PROMPT },
         ],
       },
