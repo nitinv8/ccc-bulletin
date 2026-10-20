@@ -181,6 +181,8 @@ function AdminDashboard() {
   const [showNewBulletin, setShowNewBulletin] = useState(false);
   const [toast, setToast] = useState("");
   const [exiting, setExiting] = useState<Set<string>>(new Set());
+  const [entering, setEntering] = useState<Set<string>>(new Set());
+  const [pending, setPending] = useState<{ id: string; action: "archive" | "delete" } | null>(null);
 
   const showToast = (msg: string) => {
     setToast(msg);
@@ -217,6 +219,13 @@ function AdminDashboard() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bulletinIdx, bulletins]);
 
+  const animateIn = (id: string) => {
+    setEntering((s) => new Set(s).add(id));
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      setEntering((s) => { const n = new Set(s); n.delete(id); return n; });
+    }));
+  };
+
   const handleSave = async (program: Program) => {
     if (!program.title.trim()) { alert("Title is required"); return; }
     if (!program.id) program.id = slugify(program.title) || `p-${Date.now()}`;
@@ -226,7 +235,13 @@ function AdminDashboard() {
       await adminUpsertProgram(program, bulletinId);
       showToast("Saved ✓");
       setEditing(null);
-      loadPrograms(bulletinId);
+      const isNew = !programs.find((x) => x.id === program.id);
+      if (isNew) {
+        setPrograms((prev) => [program, ...prev]);
+        animateIn(program.id);
+      } else {
+        setPrograms((prev) => prev.map((x) => x.id === program.id ? program : x));
+      }
     } catch (e: unknown) {
       alert("Save failed: " + (e instanceof Error ? e.message : String(e)));
     }
@@ -241,7 +256,7 @@ function AdminDashboard() {
   };
 
   const handleArchive = async (id: string) => {
-    if (!confirm("Archive this opportunity? It will be hidden from students but you can restore it.")) return;
+    setPending(null);
     try {
       await adminArchiveProgram(id);
       showToast("Archived");
@@ -263,14 +278,15 @@ function AdminDashboard() {
         const p = archived.find((x) => x.id === id);
         setArchived((prev) => prev.filter((x) => x.id !== id));
         if (p) setPrograms((prev) => [p, ...prev]);
+        animateIn(id);
       });
     } catch (e: unknown) {
       alert("Restore failed: " + (e instanceof Error ? e.message : String(e)));
     }
   };
 
-  const handleDelete = async (id: string, title: string) => {
-    if (!confirm(`Permanently delete "${title}"?\n\nThis cannot be undone.`)) return;
+  const handleDelete = async (id: string) => {
+    setPending(null);
     try {
       await adminDeleteProgram(id);
       showToast("Deleted");
@@ -392,8 +408,11 @@ function AdminDashboard() {
             <div
               key={p.id}
               className="p-4 flex items-center justify-between gap-3 flex-wrap cursor-pointer hover:bg-gray-50 transition-all duration-300"
-              style={{ opacity: exiting.has(p.id) ? 0 : 1, transform: exiting.has(p.id) ? "translateX(16px)" : "translateX(0)" }}
-              onClick={() => setPreviewing(p)}
+              style={{
+                opacity: exiting.has(p.id) ? 0 : 1,
+                transform: exiting.has(p.id) ? "translateX(16px)" : entering.has(p.id) ? "translateX(-16px)" : "translateX(0)",
+              }}
+              onClick={() => { if (!pending || pending.id !== p.id) setPreviewing(p); }}
             >
               <div className="min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
@@ -410,7 +429,28 @@ function AdminDashboard() {
                   {p.deadline ? ` · Deadline: ${p.deadline}` : ""}
                 </p>
               </div>
-              <div className="flex gap-2 shrink-0" onClick={(e) => e.stopPropagation()}>
+              <div className="flex gap-2 shrink-0 items-center" onClick={(e) => e.stopPropagation()}>
+                {/* Inline confirm state */}
+                {pending?.id === p.id ? (
+                  <>
+                    <span className="text-xs text-gray-500 mr-1">
+                      {pending.action === "archive" ? "Archive this?" : "Delete permanently?"}
+                    </span>
+                    <button
+                      onClick={() => pending.action === "archive" ? handleArchive(p.id) : handleDelete(p.id)}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold text-white ${pending.action === "delete" ? "bg-red-500 hover:bg-red-600" : "bg-orange-500 hover:bg-orange-600"}`}
+                    >
+                      Confirm
+                    </button>
+                    <button
+                      onClick={() => setPending(null)}
+                      className="px-3 py-1.5 rounded-lg border border-gray-200 text-xs text-gray-500 hover:bg-gray-50"
+                    >
+                      Cancel
+                    </button>
+                  </>
+                ) : (
+                  <>
                 {tab === "active" && !isExpiredInActive && (
                   <>
                     <button
@@ -420,13 +460,13 @@ function AdminDashboard() {
                       Edit
                     </button>
                     <button
-                      onClick={() => handleArchive(p.id)}
+                      onClick={() => setPending({ id: p.id, action: "archive" })}
                       className="px-3 py-1.5 rounded-lg border border-gray-200 text-xs text-orange-600 hover:bg-orange-50"
                     >
                       Archive
                     </button>
                     <button
-                      onClick={() => handleDelete(p.id, p.title)}
+                      onClick={() => setPending({ id: p.id, action: "delete" })}
                       className="px-3 py-1.5 rounded-lg border border-red-200 text-xs text-red-600 hover:bg-red-50"
                     >
                       Delete
@@ -444,17 +484,19 @@ function AdminDashboard() {
                       </button>
                     )}
                     <button
-                      onClick={() => handleArchive(p.id)}
+                      onClick={() => setPending({ id: p.id, action: "archive" })}
                       className="px-3 py-1.5 rounded-lg border border-gray-200 text-xs text-orange-600 hover:bg-orange-50"
                     >
                       Archive
                     </button>
                     <button
-                      onClick={() => handleDelete(p.id, p.title)}
+                      onClick={() => setPending({ id: p.id, action: "delete" })}
                       className="px-3 py-1.5 rounded-lg border border-red-200 text-xs text-red-600 hover:bg-red-50"
                     >
                       Delete
                     </button>
+                  </>
+                )}
                   </>
                 )}
               </div>
