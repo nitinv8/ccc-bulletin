@@ -30,7 +30,7 @@ Rules:
 export async function POST(req: NextRequest) {
   if (!process.env.AI_GATEWAY_API_KEY) {
     return NextResponse.json(
-      { error: "AI_GATEWAY_API_KEY not configured", env_keys: Object.keys(process.env).filter(k => k.startsWith("AI_") || k.startsWith("NEXT_")) },
+      { error: "AI_GATEWAY_API_KEY not configured" },
       { status: 503 }
     );
   }
