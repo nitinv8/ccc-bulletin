@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
   const mediaType = (file.type || "image/jpeg") as string;
 
   const { text } = await generateText({
-    model: gateway("google/gemini-2.0-flash"),
+    model: gateway("anthropic/claude-haiku-4.5"),
     messages: [
       {
         role: "user",
