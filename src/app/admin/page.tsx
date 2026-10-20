@@ -279,7 +279,10 @@ function AdminDashboard() {
   };
 
   const bulletin = bulletins[bulletinIdx];
-  const displayed = tab === "active" ? programs : archived;
+  const activePrograms = programs.filter((p) => !isExpired(p));
+  const expiredPrograms = programs.filter((p) => isExpired(p));
+  const archivedPrograms = [...archived, ...expiredPrograms];
+  const displayed = tab === "active" ? activePrograms : archivedPrograms;
 
   return (
     <div>
@@ -339,7 +342,7 @@ function AdminDashboard() {
         >
           Active
           <span className="ml-1.5 px-1.5 py-0.5 rounded-full text-[10px] bg-gray-100 text-gray-600">
-            {programs.length}
+            {activePrograms.length}
           </span>
         </button>
         <button
@@ -352,7 +355,7 @@ function AdminDashboard() {
         >
           Archived
           <span className="ml-1.5 px-1.5 py-0.5 rounded-full text-[10px] bg-gray-100 text-gray-600">
-            {archived.length}
+            {archivedPrograms.length}
           </span>
         </button>
       </div>
@@ -367,8 +370,13 @@ function AdminDashboard() {
         )}
         {!loading && displayed.map((p) => {
           const expired = isExpired(p);
+          const isExpiredInActive = expired && !archived.find((a) => a.id === p.id);
           return (
-            <div key={p.id} className="p-4 flex items-center justify-between gap-3 flex-wrap">
+            <div
+              key={p.id}
+              className="p-4 flex items-center justify-between gap-3 flex-wrap cursor-pointer hover:bg-gray-50 transition-colors"
+              onClick={() => setPreviewing(p)}
+            >
               <div className="min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
                   <p className="text-sm font-medium text-gray-900 truncate">{p.title}</p>
@@ -384,14 +392,8 @@ function AdminDashboard() {
                   {p.deadline ? ` · Deadline: ${p.deadline}` : ""}
                 </p>
               </div>
-              <div className="flex gap-2 shrink-0">
-                <button
-                  onClick={() => setPreviewing(p)}
-                  className="px-3 py-1.5 rounded-lg border border-gray-200 text-xs text-gray-600 hover:bg-gray-50"
-                >
-                  Preview
-                </button>
-                {tab === "active" && (
+              <div className="flex gap-2 shrink-0" onClick={(e) => e.stopPropagation()}>
+                {tab === "active" && !isExpiredInActive && (
                   <>
                     <button
                       onClick={() => { setEditing({ ...p }); setIsNewProgram(false); }}
@@ -413,13 +415,21 @@ function AdminDashboard() {
                     </button>
                   </>
                 )}
-                {tab === "archived" && (
+                {(tab === "archived" || isExpiredInActive) && (
                   <>
+                    {!isExpiredInActive && (
+                      <button
+                        onClick={() => handleRestore(p.id)}
+                        className="px-3 py-1.5 rounded-lg border border-green-200 text-xs text-green-700 hover:bg-green-50"
+                      >
+                        Restore
+                      </button>
+                    )}
                     <button
-                      onClick={() => handleRestore(p.id)}
-                      className="px-3 py-1.5 rounded-lg border border-green-200 text-xs text-green-700 hover:bg-green-50"
+                      onClick={() => handleArchive(p.id)}
+                      className="px-3 py-1.5 rounded-lg border border-gray-200 text-xs text-orange-600 hover:bg-orange-50"
                     >
-                      Restore
+                      Archive
                     </button>
                     <button
                       onClick={() => handleDelete(p.id, p.title)}
@@ -596,6 +606,8 @@ function ProgramEditor({ program, bulletinId, isNew, onCancel, onSave, onPreview
   const [extracting, setExtracting] = useState(false);
   const [extractMsg, setExtractMsg] = useState("");
   const extractInputRef = useRef<HTMLInputElement>(null);
+  const [pasteText, setPasteText] = useState("");
+  const [showPasteBox, setShowPasteBox] = useState(false);
 
   const set = <K extends keyof Program>(key: K, value: Program[K]) =>
     setForm((f) => ({ ...f, [key]: value }));
@@ -650,6 +662,47 @@ function ProgramEditor({ program, bulletinId, isNew, onCancel, onSave, onPreview
     }
   };
 
+  const handleTextExtract = async () => {
+    if (!pasteText.trim()) return;
+    setExtracting(true);
+    setExtractMsg("Extracting details from text…");
+    try {
+      const res = await fetch("/api/ai-extract-text", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: pasteText }),
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      setForm((prev) => ({
+        ...prev,
+        title: data.title || prev.title,
+        organisation: data.organisation || prev.organisation,
+        overview: data.overview || prev.overview,
+        date: data.date || prev.date,
+        deadline: data.deadline || prev.deadline,
+        time: data.time || prev.time,
+        location: data.location || prev.location,
+        grades: data.grades || prev.grades,
+        eligibility: data.eligibility || prev.eligibility,
+        audience: data.eligibility || prev.audience,
+        registrationLink: data.registrationLink || prev.registrationLink,
+        type: data.type || prev.type,
+        mode: data.mode || prev.mode,
+        instructions: data.instructions || prev.instructions,
+        tags: data.tags?.length ? data.tags : prev.tags,
+      }));
+      setExtractMsg("Fields filled — review and save.");
+      setPasteText("");
+      setShowPasteBox(false);
+    } catch (e: unknown) {
+      setExtractMsg("Extraction failed: " + (e instanceof Error ? e.message : String(e)));
+    } finally {
+      setExtracting(false);
+      setTimeout(() => setExtractMsg(""), 5000);
+    }
+  };
+
   const f ="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400";
   const l = "text-xs text-gray-500 font-medium";
 
@@ -674,6 +727,13 @@ function ProgramEditor({ program, bulletinId, isNew, onCancel, onSave, onPreview
           <div className="flex items-center gap-2 flex-wrap">
             {extractMsg && <span className="text-xs text-gray-500">{extractMsg}</span>}
             <button
+              onClick={() => setShowPasteBox((v) => !v)}
+              disabled={extracting}
+              className="px-3 py-1.5 rounded-lg bg-blue-50 border border-blue-200 text-xs text-blue-700 font-medium hover:bg-blue-100 disabled:opacity-50"
+            >
+              ✏️ Paste text
+            </button>
+            <button
               onClick={() => extractInputRef.current?.click()}
               disabled={extracting}
               className="px-3 py-1.5 rounded-lg bg-purple-50 border border-purple-200 text-xs text-purple-700 font-medium hover:bg-purple-100 disabled:opacity-50"
@@ -695,6 +755,36 @@ function ProgramEditor({ program, bulletinId, isNew, onCancel, onSave, onPreview
             </button>
           </div>
         </div>
+
+        {/* Paste text box for AI auto-fill */}
+        {showPasteBox && (
+          <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+            <p className="text-xs font-semibold text-blue-800 mb-2">Paste event information — AI will fill the form</p>
+            <textarea
+              value={pasteText}
+              onChange={(e) => setPasteText(e.target.value)}
+              placeholder="Paste any text about the event: email, brochure text, website copy…"
+              rows={5}
+              className="w-full px-3 py-2 rounded-lg border border-blue-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none"
+              autoFocus
+            />
+            <div className="flex justify-end gap-2 mt-2">
+              <button
+                onClick={() => { setShowPasteBox(false); setPasteText(""); }}
+                className="px-3 py-1.5 text-xs text-gray-500 hover:text-gray-700"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleTextExtract}
+                disabled={extracting || !pasteText.trim()}
+                className="px-4 py-1.5 rounded-lg bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700 disabled:opacity-50"
+              >
+                {extracting ? "Extracting…" : "Auto-fill form"}
+              </button>
+            </div>
+          </div>
+        )}
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="sm:col-span-2">
