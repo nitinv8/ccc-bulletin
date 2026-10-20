@@ -1,4 +1,4 @@
-import { generateText, gateway } from "ai";
+import Anthropic from "@anthropic-ai/sdk";
 import { NextRequest, NextResponse } from "next/server";
 
 const PROMPT = `Extract program/event details from the text below and return ONLY a JSON object:
@@ -30,8 +30,8 @@ Rules:
 Event text:`;
 
 export async function POST(req: NextRequest) {
-  if (!process.env.AI_GATEWAY_API_KEY) {
-    return NextResponse.json({ error: "AI_GATEWAY_API_KEY not configured" }, { status: 503 });
+  if (!process.env.ANTHROPIC_API_KEY) {
+    return NextResponse.json({ error: "ANTHROPIC_API_KEY not configured" }, { status: 503 });
   }
 
   const { text } = await req.json();
@@ -39,15 +39,23 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "No text provided" }, { status: 400 });
   }
 
-  const { text: result } = await generateText({
-    model: gateway("anthropic/claude-haiku-4.5"),
-    messages: [{ role: "user", content: `${PROMPT}\n\n${text}` }],
-  });
-
-  const clean = result.replace(/^```(?:json)?\n?/, "").replace(/\n?```$/, "").trim();
   try {
-    return NextResponse.json(JSON.parse(clean));
-  } catch {
-    return NextResponse.json({ error: "Could not parse AI response", raw: clean }, { status: 422 });
+    const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+    const message = await client.messages.create({
+      model: "claude-haiku-4-5",
+      max_tokens: 1024,
+      messages: [{ role: "user", content: `${PROMPT}\n\n${text}` }],
+    });
+
+    const result = message.content[0].type === "text" ? message.content[0].text : "";
+    const clean = result.replace(/^```(?:json)?\n?/, "").replace(/\n?```$/, "").trim();
+    try {
+      return NextResponse.json(JSON.parse(clean));
+    } catch {
+      return NextResponse.json({ error: "Could not parse AI response", raw: clean }, { status: 422 });
+    }
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e);
+    return NextResponse.json({ error: "AI request failed", details: msg }, { status: 500 });
   }
 }
