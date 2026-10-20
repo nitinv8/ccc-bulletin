@@ -1,7 +1,8 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { NextRequest, NextResponse } from "next/server";
 
-const PROMPT = `Extract program/event details from this image and return ONLY a JSON object:
+const PROMPT = `You are helping students at a school find opportunities. From this image, extract event details and return ONLY a JSON object with these fields:
+
 {
   "title": "",
   "organisation": "",
@@ -20,11 +21,14 @@ const PROMPT = `Extract program/event details from this image and return ONLY a 
 }
 
 Rules:
+- "overview": Write a clear, student-friendly description (3-5 sentences) covering: what the opportunity is about, who can participate, and why it's worth joining. Use simple, engaging language.
+- "instructions": Include any important instructions, steps to register, or things students need to know/prepare.
+- "eligibility": Who can participate (age, grade, school type, nationality, etc.).
+- "grades": format like "9-12" or "10-11" — extract from eligibility info.
 - "type": one of: Summer Program, Competition, Workshop, Internship, In-Person Session, Virtual Session, Podcast, Information
 - "mode": one of: Online, In-Person, Online/In-Person
-- "grades": format like "9-12" or "10-11"
 - "tags": 3-5 relevant keywords as array
-- Leave fields empty string if not found
+- Leave fields as empty string if not found
 - Return ONLY the JSON, no other text`;
 
 export async function POST(req: NextRequest) {
