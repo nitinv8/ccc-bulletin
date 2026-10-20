@@ -57,6 +57,7 @@ function IconArchive() {
 export default function ProgramCard({
   program,
   clickableCard = false,
+  showArchiveAction = false,
 }: {
   program: Program;
   showArchiveAction?: boolean;
@@ -98,18 +99,20 @@ export default function ProgramCard({
     >
       {/* Star + Archive in top-right */}
       <div className="absolute top-3.5 right-3.5 flex items-center gap-1.5">
-        <div className="relative group/arc">
-          <button
-            onClick={(e) => { e.preventDefault(); e.stopPropagation(); archived ? unarchive(program.id) : archive(program.id); }}
-            className={`p-1 rounded transition-colors ${archived ? "text-blue-400" : "text-gray-300 hover:text-gray-500"}`}
-            title={archived ? "Unarchive" : "Archive"}
-          >
-            <IconArchive />
-          </button>
-          <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-[10px] px-1.5 py-0.5 rounded whitespace-nowrap opacity-0 group-hover/arc:opacity-100 transition-opacity pointer-events-none z-10">
-            {archived ? "Unarchive" : "Archive"}
-          </span>
-        </div>
+        {showArchiveAction && (
+          <div className="relative group/arc">
+            <button
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); archived ? unarchive(program.id) : archive(program.id); }}
+              className={`p-1 rounded transition-colors ${archived ? "text-blue-400" : "text-gray-300 hover:text-gray-500"}`}
+              title={archived ? "Unarchive" : "Archive"}
+            >
+              <IconArchive />
+            </button>
+            <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-[10px] px-1.5 py-0.5 rounded whitespace-nowrap opacity-0 group-hover/arc:opacity-100 transition-opacity pointer-events-none z-10">
+              {archived ? "Unarchive" : "Archive"}
+            </span>
+          </div>
+        )}
         <div className="relative group/star">
           <button
             onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleBookmark(program.id); }}

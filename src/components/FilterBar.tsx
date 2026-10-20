@@ -23,7 +23,7 @@ interface FilterBarProps {
   categories: { key: string; label: string }[];
   types: string[];
   grades: string[];
-  eligibilities: string[];
+  eligibilities?: string[];
   formats: string[];
   locations: string[];
   filters: FilterState;
@@ -36,19 +36,17 @@ function Chip({
   label,
   active,
   onClick,
-  color,
 }: {
   label: string;
   active: boolean;
   onClick: () => void;
-  color?: string;
 }) {
   return (
     <button
       onClick={onClick}
       className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all ${
         active
-          ? color ?? "bg-yellow-400 text-yellow-900 shadow-sm"
+          ? "bg-yellow-400 text-yellow-900 shadow-sm"
           : "bg-gray-100 text-gray-600 hover:bg-gray-200"
       }`}
     >
@@ -57,22 +55,41 @@ function Chip({
   );
 }
 
-const TYPE_COLORS: Record<string, string> = {
-  "Summer Program": "bg-orange-400 text-white",
-  Competition: "bg-blue-500 text-white",
-  Workshop: "bg-purple-500 text-white",
-  Internship: "bg-green-500 text-white",
-  "In-Person Session": "bg-red-500 text-white",
-  "Virtual Session": "bg-teal-500 text-white",
-  Podcast: "bg-pink-500 text-white",
-  Information: "bg-gray-500 text-white",
-};
+function FilterSelect({
+  value,
+  onChange,
+  placeholder,
+  options,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  placeholder: string;
+  options: { value: string; label: string }[];
+}) {
+  const active = !!value;
+  return (
+    <select
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-yellow-400 appearance-none pr-7 ${
+        active
+          ? "bg-yellow-400 text-yellow-900 border-yellow-400"
+          : "bg-gray-100 text-gray-600 border-gray-200 hover:bg-gray-200"
+      }`}
+      style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236b7280'/%3E%3C/svg%3E\")", backgroundRepeat: "no-repeat", backgroundPosition: "right 10px center" }}
+    >
+      <option value="">{placeholder}</option>
+      {options.map((o) => (
+        <option key={o.value} value={o.value}>{o.label}</option>
+      ))}
+    </select>
+  );
+}
 
 export default function FilterBar({
   categories,
   types,
   grades,
-  eligibilities,
   formats,
   locations,
   filters,
@@ -80,16 +97,11 @@ export default function FilterBar({
   onClear,
   activeCount,
 }: FilterBarProps) {
-  const secondaryActive =
-    filters.grade || filters.eligibility || filters.format || filters.location || filters.deadline;
-
   return (
     <div className="mb-6 space-y-3">
       {/* Search */}
       <div className="relative">
-        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">
-          🔍
-        </span>
+        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">🔍</span>
         <input
           type="text"
           placeholder="Search opportunities…"
@@ -107,13 +119,9 @@ export default function FilterBar({
         )}
       </div>
 
-      {/* Category pills */}
+      {/* Category chips */}
       <div className="flex flex-wrap gap-2">
-        <Chip
-          label="All"
-          active={!filters.category}
-          onClick={() => onChange({ category: "" })}
-        />
+        <Chip label="All" active={!filters.category} onClick={() => onChange({ category: "" })} />
         {categories.map((c) => (
           <Chip
             key={c.key}
@@ -124,101 +132,54 @@ export default function FilterBar({
         ))}
       </div>
 
-      {/* Type pills — horizontal scroll on mobile */}
-      <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
-        <Chip
-          label="All types"
-          active={!filters.type}
-          onClick={() => onChange({ type: "" })}
-        />
-        {types.map((t) => (
-          <Chip
-            key={t}
-            label={t}
-            active={filters.type === t}
-            color={TYPE_COLORS[t]}
-            onClick={() => onChange({ type: filters.type === t ? "" : t })}
-          />
-        ))}
-      </div>
-
-      {/* Secondary filters row */}
+      {/* Dropdown filters row */}
       <div className="flex flex-wrap gap-2 items-center">
-        {/* Grade */}
+        {/* Type of Event */}
+        {types.length > 0 && (
+          <FilterSelect
+            value={filters.type}
+            onChange={(v) => onChange({ type: v })}
+            placeholder="Type of Event"
+            options={types.map((t) => ({ value: t, label: t }))}
+          />
+        )}
+
+        {/* Applicable Grades */}
         {grades.length > 0 && (
-          <select
+          <FilterSelect
             value={filters.grade}
-            onChange={(e) => onChange({ grade: e.target.value })}
-            className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-yellow-400 ${
-              filters.grade
-                ? "bg-yellow-400 text-yellow-900 border-yellow-400"
-                : "bg-gray-100 text-gray-600 border-gray-200 hover:bg-gray-200"
-            }`}
-          >
-            <option value="">Grade</option>
-            {grades.map((g) => (
-              <option key={g} value={g}>
-                Grade {g}
-              </option>
-            ))}
-          </select>
+            onChange={(v) => onChange({ grade: v })}
+            placeholder="Applicable Grades"
+            options={grades.map((g) => ({ value: g, label: `Grade ${g}` }))}
+          />
+        )}
+
+        {/* Deadline */}
+        <FilterSelect
+          value={filters.deadline}
+          onChange={(v) => onChange({ deadline: v })}
+          placeholder="Deadline"
+          options={DEADLINE_OPTIONS.filter((d) => d.value !== "").map((d) => ({ value: d.value, label: d.label }))}
+        />
+
+        {/* Location */}
+        {locations.length > 0 && (
+          <FilterSelect
+            value={filters.location}
+            onChange={(v) => onChange({ location: v })}
+            placeholder="Location"
+            options={locations.map((l) => ({ value: l, label: l }))}
+          />
         )}
 
         {/* Format */}
         {formats.length > 1 && (
-          <select
+          <FilterSelect
             value={filters.format}
-            onChange={(e) => onChange({ format: e.target.value })}
-            className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-yellow-400 ${
-              filters.format
-                ? "bg-yellow-400 text-yellow-900 border-yellow-400"
-                : "bg-gray-100 text-gray-600 border-gray-200 hover:bg-gray-200"
-            }`}
-          >
-            <option value="">Format</option>
-            {formats.map((f) => (
-              <option key={f} value={f}>
-                {f}
-              </option>
-            ))}
-          </select>
-        )}
-
-        {/* Deadline */}
-        <select
-          value={filters.deadline}
-          onChange={(e) => onChange({ deadline: e.target.value })}
-          className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-yellow-400 ${
-            filters.deadline
-              ? "bg-yellow-400 text-yellow-900 border-yellow-400"
-              : "bg-gray-100 text-gray-600 border-gray-200 hover:bg-gray-200"
-          }`}
-        >
-          {DEADLINE_OPTIONS.map((d) => (
-            <option key={d.value} value={d.value}>
-              {d.label}
-            </option>
-          ))}
-        </select>
-
-        {/* Location */}
-        {locations.length > 0 && (
-          <select
-            value={filters.location}
-            onChange={(e) => onChange({ location: e.target.value })}
-            className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-yellow-400 ${
-              filters.location
-                ? "bg-yellow-400 text-yellow-900 border-yellow-400"
-                : "bg-gray-100 text-gray-600 border-gray-200 hover:bg-gray-200"
-            }`}
-          >
-            <option value="">Location</option>
-            {locations.map((l) => (
-              <option key={l} value={l}>
-                {l}
-              </option>
-            ))}
-          </select>
+            onChange={(v) => onChange({ format: v })}
+            placeholder="Format"
+            options={formats.map((f) => ({ value: f, label: f }))}
+          />
         )}
 
         {activeCount > 0 && (

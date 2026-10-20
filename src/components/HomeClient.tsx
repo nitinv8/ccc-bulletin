@@ -4,6 +4,8 @@ import ProgramCard from "@/components/ProgramCard";
 import FilterBar, { FilterState } from "@/components/FilterBar";
 import { Bulletin, eligibilityGroup, matchesDeadlineFilter, isExpired } from "@/lib/programs";
 
+const STORAGE_KEY = "ccc-filters";
+
 const EMPTY_FILTERS: FilterState = {
   search: "",
   category: "",
@@ -15,6 +17,20 @@ const EMPTY_FILTERS: FilterState = {
   deadline: "",
 };
 
+function loadFilters(): FilterState {
+  if (typeof window === "undefined") return EMPTY_FILTERS;
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    return saved ? { ...EMPTY_FILTERS, ...JSON.parse(saved) } : EMPTY_FILTERS;
+  } catch {
+    return EMPTY_FILTERS;
+  }
+}
+
+function saveFilters(f: FilterState) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(f)); } catch {}
+}
+
 const categories = [
   { key: "university-visits", label: "University Visits & CCC Initiatives" },
   { key: "future-ready", label: "Activities to Make You Future Ready" },
@@ -25,9 +41,13 @@ export default function HomeClient({ bulletins }: { bulletins: Bulletin[] }) {
   const bulletin = bulletins[bulletinIndex];
   const programs = bulletin?.programs ?? [];
 
-  const [filters, setFilters] = useState<FilterState>(EMPTY_FILTERS);
-  const updateFilters = (patch: Partial<FilterState>) => setFilters((f) => ({ ...f, ...patch }));
-  const clearFilters = () => setFilters(EMPTY_FILTERS);
+  const [filters, setFilters] = useState<FilterState>(loadFilters);
+  const updateFilters = (patch: Partial<FilterState>) =>
+    setFilters((f) => { const next = { ...f, ...patch }; saveFilters(next); return next; });
+  const clearFilters = () => {
+    try { localStorage.removeItem(STORAGE_KEY); } catch {}
+    setFilters(EMPTY_FILTERS);
+  };
 
   const types = useMemo(() => [...new Set(programs.map((p) => p.type))].sort(), [programs]);
   const formats = useMemo(() => [...new Set(programs.map((p) => p.mode))].sort(), [programs]);
@@ -125,7 +145,6 @@ export default function HomeClient({ bulletins }: { bulletins: Bulletin[] }) {
         categories={categories}
         types={types}
         grades={allGrades}
-        eligibilities={eligibilities}
         formats={formats}
         locations={locations}
         filters={filters}
