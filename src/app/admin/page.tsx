@@ -594,7 +594,7 @@ function NewBulletinModal({ onCancel, onCreate }: {
 // ─── program editor ───────────────────────────────────────────────────────────
 
 type EditorStep = "input" | "form";
-type InputMode = "text" | "image";
+type InputMode = "text" | "image" | "manual";
 
 function SectionHeader({ title }: { title: string }) {
   return (
@@ -658,15 +658,17 @@ function ProgramEditor({ program, bulletinId, isNew, onCancel, onSave, onPreview
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ text: pasteText }),
         });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        data = await res.json();
+        const body = await res.json();
+        if (!res.ok) throw new Error(body?.details || body?.error || `HTTP ${res.status}`);
+        data = body;
       } else {
         if (!imageFile) return;
         const fd = new FormData();
         fd.append("image", imageFile);
         const res = await fetch("/api/ai-extract", { method: "POST", body: fd });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        data = await res.json();
+        const body = await res.json();
+        if (!res.ok) throw new Error(body?.details || body?.error || `HTTP ${res.status}`);
+        data = body;
       }
       setForm((prev) => applyExtracted(data, prev));
       setStep("form");
@@ -703,7 +705,7 @@ function ProgramEditor({ program, bulletinId, isNew, onCancel, onSave, onPreview
     </label>
   );
 
-  const canProcess = inputMode === "text" ? pasteText.trim().length > 0 : imageFile !== null;
+  const canProcess = inputMode === "text" ? pasteText.trim().length > 0 : inputMode === "image" ? imageFile !== null : false;
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
@@ -755,7 +757,7 @@ function ProgramEditor({ program, bulletinId, isNew, onCancel, onSave, onPreview
                 <div className="flex rounded-xl border border-gray-200 overflow-hidden mb-5 w-fit mx-auto">
                   <button
                     onClick={() => setInputMode("text")}
-                    className={`px-6 py-2.5 text-sm font-medium transition-colors ${
+                    className={`px-5 py-2.5 text-sm font-medium transition-colors ${
                       inputMode === "text" ? "bg-gray-900 text-white" : "text-gray-500 hover:bg-gray-50"
                     }`}
                   >
@@ -763,11 +765,19 @@ function ProgramEditor({ program, bulletinId, isNew, onCancel, onSave, onPreview
                   </button>
                   <button
                     onClick={() => setInputMode("image")}
-                    className={`px-6 py-2.5 text-sm font-medium transition-colors ${
+                    className={`px-5 py-2.5 text-sm font-medium transition-colors border-x border-gray-200 ${
                       inputMode === "image" ? "bg-gray-900 text-white" : "text-gray-500 hover:bg-gray-50"
                     }`}
                   >
                     🖼 Upload image
+                  </button>
+                  <button
+                    onClick={() => { setStep("form"); }}
+                    className={`px-5 py-2.5 text-sm font-medium transition-colors ${
+                      inputMode === "manual" ? "bg-gray-900 text-white" : "text-gray-500 hover:bg-gray-50"
+                    }`}
+                  >
+                    📝 Fill manually
                   </button>
                 </div>
 
