@@ -180,6 +180,7 @@ function AdminDashboard() {
   const [previewing, setPreviewing] = useState<Program | null>(null);
   const [showNewBulletin, setShowNewBulletin] = useState(false);
   const [toast, setToast] = useState("");
+  const [exiting, setExiting] = useState<Set<string>>(new Set());
 
   const showToast = (msg: string) => {
     setToast(msg);
@@ -231,13 +232,24 @@ function AdminDashboard() {
     }
   };
 
+  const animateOut = (id: string, then: () => void) => {
+    setExiting((s) => new Set(s).add(id));
+    setTimeout(() => {
+      then();
+      setExiting((s) => { const n = new Set(s); n.delete(id); return n; });
+    }, 300);
+  };
+
   const handleArchive = async (id: string) => {
     if (!confirm("Archive this opportunity? It will be hidden from students but you can restore it.")) return;
     try {
       await adminArchiveProgram(id);
       showToast("Archived");
-      const bulletinId = bulletins[bulletinIdx]?.id;
-      if (bulletinId) loadPrograms(bulletinId);
+      animateOut(id, () => {
+        const p = programs.find((x) => x.id === id);
+        setPrograms((prev) => prev.filter((x) => x.id !== id));
+        if (p) setArchived((prev) => [p, ...prev]);
+      });
     } catch (e: unknown) {
       alert("Archive failed: " + (e instanceof Error ? e.message : String(e)));
     }
@@ -247,8 +259,11 @@ function AdminDashboard() {
     try {
       await adminRestoreProgram(id);
       showToast("Restored ✓");
-      const bulletinId = bulletins[bulletinIdx]?.id;
-      if (bulletinId) loadPrograms(bulletinId);
+      animateOut(id, () => {
+        const p = archived.find((x) => x.id === id);
+        setArchived((prev) => prev.filter((x) => x.id !== id));
+        if (p) setPrograms((prev) => [p, ...prev]);
+      });
     } catch (e: unknown) {
       alert("Restore failed: " + (e instanceof Error ? e.message : String(e)));
     }
@@ -259,8 +274,10 @@ function AdminDashboard() {
     try {
       await adminDeleteProgram(id);
       showToast("Deleted");
-      const bulletinId = bulletins[bulletinIdx]?.id;
-      if (bulletinId) loadPrograms(bulletinId);
+      animateOut(id, () => {
+        setPrograms((prev) => prev.filter((x) => x.id !== id));
+        setArchived((prev) => prev.filter((x) => x.id !== id));
+      });
     } catch (e: unknown) {
       alert("Delete failed: " + (e instanceof Error ? e.message : String(e)));
     }
@@ -374,7 +391,8 @@ function AdminDashboard() {
           return (
             <div
               key={p.id}
-              className="p-4 flex items-center justify-between gap-3 flex-wrap cursor-pointer hover:bg-gray-50 transition-colors"
+              className="p-4 flex items-center justify-between gap-3 flex-wrap cursor-pointer hover:bg-gray-50 transition-all duration-300"
+              style={{ opacity: exiting.has(p.id) ? 0 : 1, transform: exiting.has(p.id) ? "translateX(16px)" : "translateX(0)" }}
               onClick={() => setPreviewing(p)}
             >
               <div className="min-w-0">
