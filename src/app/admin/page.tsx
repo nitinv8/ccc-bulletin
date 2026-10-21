@@ -312,10 +312,7 @@ function AdminDashboard() {
   };
 
   const bulletin = bulletins[bulletinIdx];
-  const activePrograms = programs.filter((p) => !isExpired(p));
-  const expiredPrograms = programs.filter((p) => isExpired(p));
-  const archivedPrograms = [...archived, ...expiredPrograms];
-  const displayed = tab === "active" ? activePrograms : archivedPrograms;
+  const displayed = tab === "active" ? programs : archived;
 
   return (
     <div>
@@ -375,7 +372,7 @@ function AdminDashboard() {
         >
           Active
           <span className="ml-1.5 px-1.5 py-0.5 rounded-full text-[10px] bg-gray-100 text-gray-600">
-            {activePrograms.length}
+            {programs.length}
           </span>
         </button>
         <button
@@ -388,7 +385,7 @@ function AdminDashboard() {
         >
           Archived
           <span className="ml-1.5 px-1.5 py-0.5 rounded-full text-[10px] bg-gray-100 text-gray-600">
-            {archivedPrograms.length}
+            {archived.length}
           </span>
         </button>
       </div>
@@ -403,25 +400,24 @@ function AdminDashboard() {
         )}
         {!loading && displayed.map((p) => {
           const expired = isExpired(p);
-          const isExpiredInActive = expired && !archived.find((a) => a.id === p.id);
           return (
             <div
               key={p.id}
-              className="p-4 flex items-center justify-between gap-3 flex-wrap cursor-pointer hover:bg-gray-50 transition-all duration-300"
+              className="p-3 sm:p-4 flex items-start sm:items-center justify-between gap-3 flex-wrap cursor-pointer hover:bg-gray-50 transition-all duration-300"
               style={{
                 opacity: exiting.has(p.id) ? 0 : 1,
                 transform: exiting.has(p.id) ? "translateX(16px)" : entering.has(p.id) ? "translateX(-16px)" : "translateX(0)",
               }}
               onClick={() => { if (!pending || pending.id !== p.id) setPreviewing(p); }}
             >
-              <div className="min-w-0">
+              <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <p className="text-sm font-medium text-gray-900 truncate">{p.title}</p>
+                  <p className="text-sm font-medium text-gray-900">{p.title}</p>
                   {p.isNew && (
                     <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-green-100 text-green-700">NEW</span>
                   )}
                   {expired && (
-                    <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-gray-200 text-gray-400">Expired</span>
+                    <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-orange-100 text-orange-600">Expired</span>
                   )}
                 </div>
                 <p className="text-xs text-gray-500 mt-0.5">
@@ -429,8 +425,7 @@ function AdminDashboard() {
                   {p.deadline ? ` · Deadline: ${p.deadline}` : ""}
                 </p>
               </div>
-              <div className="flex gap-2 shrink-0 items-center" onClick={(e) => e.stopPropagation()}>
-                {/* Inline confirm state */}
+              <div className="flex gap-2 shrink-0 items-center flex-wrap justify-end" onClick={(e) => e.stopPropagation()}>
                 {pending?.id === p.id ? (
                   <>
                     <span className="text-xs text-gray-500 mr-1">
@@ -449,9 +444,30 @@ function AdminDashboard() {
                       Cancel
                     </button>
                   </>
-                ) : (
+                ) : tab === "active" ? (
                   <>
-                {tab === "active" && !isExpiredInActive && (
+                    <button
+                      onClick={() => { setEditing({ ...p }); setIsNewProgram(false); }}
+                      className="px-3 py-1.5 rounded-lg border border-gray-200 text-xs text-gray-700 hover:bg-gray-50"
+                    >
+                      Edit
+                    </button>
+                    {!expired && (
+                      <button
+                        onClick={() => setPending({ id: p.id, action: "archive" })}
+                        className="px-3 py-1.5 rounded-lg border border-gray-200 text-xs text-orange-600 hover:bg-orange-50"
+                      >
+                        Archive
+                      </button>
+                    )}
+                    <button
+                      onClick={() => setPending({ id: p.id, action: "delete" })}
+                      className="px-3 py-1.5 rounded-lg border border-red-200 text-xs text-red-600 hover:bg-red-50"
+                    >
+                      Delete
+                    </button>
+                  </>
+                ) : (
                   <>
                     <button
                       onClick={() => { setEditing({ ...p }); setIsNewProgram(false); }}
@@ -460,10 +476,10 @@ function AdminDashboard() {
                       Edit
                     </button>
                     <button
-                      onClick={() => setPending({ id: p.id, action: "archive" })}
-                      className="px-3 py-1.5 rounded-lg border border-gray-200 text-xs text-orange-600 hover:bg-orange-50"
+                      onClick={() => handleRestore(p.id)}
+                      className="px-3 py-1.5 rounded-lg border border-green-200 text-xs text-green-700 hover:bg-green-50"
                     >
-                      Archive
+                      Restore
                     </button>
                     <button
                       onClick={() => setPending({ id: p.id, action: "delete" })}
@@ -471,32 +487,6 @@ function AdminDashboard() {
                     >
                       Delete
                     </button>
-                  </>
-                )}
-                {(tab === "archived" || isExpiredInActive) && (
-                  <>
-                    {!isExpiredInActive && (
-                      <button
-                        onClick={() => handleRestore(p.id)}
-                        className="px-3 py-1.5 rounded-lg border border-green-200 text-xs text-green-700 hover:bg-green-50"
-                      >
-                        Restore
-                      </button>
-                    )}
-                    <button
-                      onClick={() => setPending({ id: p.id, action: "archive" })}
-                      className="px-3 py-1.5 rounded-lg border border-gray-200 text-xs text-orange-600 hover:bg-orange-50"
-                    >
-                      Archive
-                    </button>
-                    <button
-                      onClick={() => setPending({ id: p.id, action: "delete" })}
-                      className="px-3 py-1.5 rounded-lg border border-red-200 text-xs text-red-600 hover:bg-red-50"
-                    >
-                      Delete
-                    </button>
-                  </>
-                )}
                   </>
                 )}
               </div>
@@ -789,14 +779,6 @@ function ProgramEditor({ program, bulletinId, isNew, onCancel, onSave, onPreview
           <div className="flex items-center gap-2">
             {step === "form" && extractMsg && (
               <span className="text-xs text-green-600 font-medium">{extractMsg}</span>
-            )}
-            {step === "form" && (
-              <button
-                onClick={() => onPreview(form)}
-                className="px-3 py-1.5 rounded-lg border border-gray-200 text-xs text-gray-600 hover:bg-gray-50"
-              >
-                👁 Preview
-              </button>
             )}
             <button onClick={onCancel} className="text-gray-400 hover:text-gray-600 text-xl leading-none px-1">×</button>
           </div>

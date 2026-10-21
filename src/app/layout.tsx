@@ -18,7 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${inter.className} bg-gray-50 min-h-screen`}>
         <BookmarkProvider>
           <Header />
-          <main className="max-w-6xl mx-auto px-4 py-6">{children}</main>
+          <main className="max-w-6xl mx-auto px-3 py-4 sm:px-4 sm:py-6">{children}</main>
           <footer className="border-t border-gray-200 mt-12 py-6 text-center text-xs text-gray-400">
             Career Counselling Centre &middot; The Shri Ram School, Aravali &amp; Moulsari
             <span className="mx-2">&middot;</span>

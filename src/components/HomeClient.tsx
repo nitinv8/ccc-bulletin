@@ -34,7 +34,7 @@ function saveFilters(f: FilterState) {
 const categories = [
   { key: "university-visits", label: "University Visits & CCC Initiatives" },
   { key: "future-ready", label: "Activities to Make You Future Ready" },
-];
+] as const;
 
 export default function HomeClient({ bulletins }: { bulletins: Bulletin[] }) {
   const [bulletinIndex, setBulletinIndex] = useState(0);
@@ -77,8 +77,8 @@ export default function HomeClient({ bulletins }: { bulletins: Bulletin[] }) {
 
   const filtered = useMemo(() => {
     return programs.filter((p) => {
-      // hide expired unless the user explicitly filters for them
-      if (filters.deadline !== "expired" && isExpired(p)) return false;
+      if (filters.deadline === "expired" && !isExpired(p)) return false;
+      if (filters.deadline && filters.deadline !== "expired" && isExpired(p)) return false;
       if (filters.category && p.category !== filters.category) return false;
       if (filters.type && p.type !== filters.type) return false;
       if (filters.format && p.mode !== filters.format) return false;
@@ -113,14 +113,34 @@ export default function HomeClient({ bulletins }: { bulletins: Bulletin[] }) {
 
   return (
     <div>
-      {/* Bulletin month tabs */}
+      <div className="mb-4">
+        <div className="flex items-center gap-2">
+          <h2 className="text-base font-bold text-gray-900 leading-tight sm:text-lg">{bulletin.title || bulletin.month}</h2>
+          <span className="px-2 py-0.5 rounded-full bg-yellow-100 text-yellow-800 text-xs font-semibold">
+            {programs.length}
+          </span>
+        </div>
+      </div>
+
+      <FilterBar
+        types={types}
+        grades={allGrades}
+        formats={formats}
+        locations={locations}
+        filters={filters}
+        onChange={updateFilters}
+        onClear={clearFilters}
+        activeCount={activeCount}
+      />
+
+      {/* Bulletin month tabs — below search/filters */}
       {bulletins.length > 1 && (
-        <div className="flex gap-1 overflow-x-auto pb-1 mb-5 scrollbar-none">
+        <div className="flex gap-1.5 overflow-x-auto pb-1 mb-5" style={{ scrollbarWidth: "none" }}>
           {bulletins.map((b, i) => (
             <button
               key={b.id}
               onClick={() => { setBulletinIndex(i); clearFilters(); }}
-              className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all shrink-0 ${
                 i === bulletinIndex
                   ? "bg-yellow-400 text-yellow-900 shadow-sm"
                   : "bg-gray-100 text-gray-600 hover:bg-gray-200"
@@ -131,27 +151,6 @@ export default function HomeClient({ bulletins }: { bulletins: Bulletin[] }) {
           ))}
         </div>
       )}
-
-      <div className="mb-5">
-        <div className="flex items-center gap-2.5">
-          <h2 className="text-lg font-bold text-gray-900 leading-tight">{bulletin.title || bulletin.month}</h2>
-          <span className="px-2.5 py-0.5 rounded-full bg-yellow-100 text-yellow-800 text-xs font-semibold">
-            {programs.length}
-          </span>
-        </div>
-      </div>
-
-      <FilterBar
-        categories={categories}
-        types={types}
-        grades={allGrades}
-        formats={formats}
-        locations={locations}
-        filters={filters}
-        onChange={updateFilters}
-        onClear={clearFilters}
-        activeCount={activeCount}
-      />
 
       {anyFilterActive ? (
         <div>

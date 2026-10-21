@@ -20,7 +20,6 @@ export const DEADLINE_OPTIONS = [
 ];
 
 interface FilterBarProps {
-  categories: { key: string; label: string }[];
   types: string[];
   grades: string[];
   eligibilities?: string[];
@@ -30,29 +29,6 @@ interface FilterBarProps {
   onChange: (patch: Partial<FilterState>) => void;
   onClear: () => void;
   activeCount: number;
-}
-
-function Chip({
-  label,
-  active,
-  onClick,
-}: {
-  label: string;
-  active: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all ${
-        active
-          ? "bg-yellow-400 text-yellow-900 shadow-sm"
-          : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-      }`}
-    >
-      {label}
-    </button>
-  );
 }
 
 function FilterSelect({
@@ -71,7 +47,7 @@ function FilterSelect({
     <select
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-yellow-400 appearance-none pr-7 ${
+      className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-yellow-400 appearance-none pr-7 whitespace-nowrap shrink-0 ${
         active
           ? "bg-yellow-400 text-yellow-900 border-yellow-400"
           : "bg-gray-100 text-gray-600 border-gray-200 hover:bg-gray-200"
@@ -87,7 +63,6 @@ function FilterSelect({
 }
 
 export default function FilterBar({
-  categories,
   types,
   grades,
   formats,
@@ -98,7 +73,7 @@ export default function FilterBar({
   activeCount,
 }: FilterBarProps) {
   return (
-    <div className="mb-6 space-y-3">
+    <div className="mb-4 space-y-2">
       {/* Search */}
       <div className="relative">
         <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">🔍</span>
@@ -107,7 +82,7 @@ export default function FilterBar({
           placeholder="Search opportunities…"
           value={filters.search}
           onChange={(e) => onChange({ search: e.target.value })}
-          className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent shadow-sm"
+          className="w-full pl-9 pr-9 py-2.5 rounded-xl border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent shadow-sm"
         />
         {filters.search && (
           <button
@@ -119,50 +94,30 @@ export default function FilterBar({
         )}
       </div>
 
-      {/* Category chips */}
-      <div className="flex flex-wrap gap-2">
-        <Chip label="All" active={!filters.category} onClick={() => onChange({ category: "" })} />
-        {categories.map((c) => (
-          <Chip
-            key={c.key}
-            label={c.key === "university-visits" ? "University Visits" : "Future Ready"}
-            active={filters.category === c.key}
-            onClick={() => onChange({ category: filters.category === c.key ? "" : c.key })}
-          />
-        ))}
-      </div>
-
-      {/* Dropdown filters row */}
-      <div className="flex flex-wrap gap-2 items-center">
-        {/* Type of Event */}
+      {/* Filters — horizontal scroll on mobile */}
+      <div className="flex gap-2 overflow-x-auto pb-1 items-center" style={{ scrollbarWidth: "none" }}>
         {types.length > 0 && (
           <FilterSelect
             value={filters.type}
             onChange={(v) => onChange({ type: v })}
-            placeholder="Type of Event"
+            placeholder="Type"
             options={types.map((t) => ({ value: t, label: t }))}
           />
         )}
-
-        {/* Applicable Grades */}
         {grades.length > 0 && (
           <FilterSelect
             value={filters.grade}
             onChange={(v) => onChange({ grade: v })}
-            placeholder="Applicable Grades"
+            placeholder="Grade"
             options={grades.map((g) => ({ value: g, label: `Grade ${g}` }))}
           />
         )}
-
-        {/* Deadline */}
         <FilterSelect
           value={filters.deadline}
           onChange={(v) => onChange({ deadline: v })}
           placeholder="Deadline"
           options={DEADLINE_OPTIONS.filter((d) => d.value !== "").map((d) => ({ value: d.value, label: d.label }))}
         />
-
-        {/* Location */}
         {locations.length > 0 && (
           <FilterSelect
             value={filters.location}
@@ -171,8 +126,6 @@ export default function FilterBar({
             options={locations.map((l) => ({ value: l, label: l }))}
           />
         )}
-
-        {/* Format */}
         {formats.length > 1 && (
           <FilterSelect
             value={filters.format}
@@ -181,13 +134,12 @@ export default function FilterBar({
             options={formats.map((f) => ({ value: f, label: f }))}
           />
         )}
-
         {activeCount > 0 && (
           <button
             onClick={onClear}
-            className="ml-auto text-xs text-gray-400 hover:text-red-500 transition-colors"
+            className="shrink-0 text-xs text-gray-400 hover:text-red-500 transition-colors whitespace-nowrap ml-1"
           >
-            Clear all ×
+            Clear ×
           </button>
         )}
       </div>

@@ -48,6 +48,7 @@ export async function adminGetPrograms(bulletinId: string) {
     .from("programs")
     .select("*")
     .eq("bulletin_id", bulletinId)
+    .neq("admin_archived", true)
     .order("created_at", { ascending: false });
   if (error) throw error;
   return data ?? [];

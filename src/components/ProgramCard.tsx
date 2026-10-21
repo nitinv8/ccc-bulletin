@@ -188,7 +188,7 @@ export default function ProgramCard({
 
       {/* Action row */}
       <div className="flex flex-wrap items-center gap-2 pt-3 border-t border-gray-100">
-        {/* Register: real link, not expired, not video-only */}
+        {/* Register/View: real link, not expired, not video-only */}
         {hasRealLink && !expired && !isVideoOnly && (
           <a
             href={program.registrationLink}
@@ -197,7 +197,7 @@ export default function ProgramCard({
             onClick={(e) => e.stopPropagation()}
             className="px-3.5 py-1.5 rounded-lg bg-yellow-400 text-yellow-900 text-xs font-semibold hover:bg-yellow-500 transition-colors shadow-sm"
           >
-            Register →
+            {program.type === "Podcast" || program.registrationLink?.includes("youtube") || program.registrationLink?.includes("youtu.be") ? "View →" : "Register →"}
           </a>
         )}
         {/* View (expired registration link) */}
