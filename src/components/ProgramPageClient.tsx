@@ -24,7 +24,7 @@ const deadlineStyles: Record<string, string> = {
 };
 
 export default function ProgramPageClient({ program }: { program: Program | null }) {
-  const { isBookmarked, toggleBookmark, isArchived, archive, unarchive } = useInteractions();
+  const { isBookmarked, toggleBookmark } = useInteractions();
   const [shareMsg, setShareMsg] = useState<string | null>(null);
 
   if (!program) {
@@ -39,7 +39,6 @@ export default function ProgramPageClient({ program }: { program: Program | null
   }
 
   const bookmarked = isBookmarked(program.id);
-  const archived = isArchived(program.id);
   const urgency = deadlineUrgency(program);
   const expired = isExpired(program);
   const colorClass = typeColors[program.type] || "bg-gray-100 text-gray-700";
@@ -84,19 +83,6 @@ export default function ProgramPageClient({ program }: { program: Program | null
             )}
           </div>
           <div className="flex items-center gap-1.5 shrink-0">
-            <div className="relative group">
-              <button
-                onClick={() => (archived ? unarchive(program.id) : archive(program.id))}
-                className={`p-1.5 rounded transition-colors ${archived ? "text-blue-400" : "text-gray-300 hover:text-gray-500"}`}
-              >
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/>
-                </svg>
-              </button>
-              <span className="absolute -bottom-7 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-[10px] px-2 py-0.5 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
-                {archived ? "Unarchive" : "Archive"}
-              </span>
-            </div>
             <div className="relative group">
               <button
                 onClick={() => toggleBookmark(program.id)}
