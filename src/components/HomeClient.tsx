@@ -21,14 +21,15 @@ function loadFilters(): FilterState {
   if (typeof window === "undefined") return EMPTY_FILTERS;
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
-    return saved ? { ...EMPTY_FILTERS, ...JSON.parse(saved) } : EMPTY_FILTERS;
+    return saved ? { ...EMPTY_FILTERS, ...JSON.parse(saved), search: "" } : EMPTY_FILTERS;
   } catch {
     return EMPTY_FILTERS;
   }
 }
 
 function saveFilters(f: FilterState) {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(f)); } catch {}
+  const { search: _s, ...rest } = f;
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(rest)); } catch {}
 }
 
 const categories = [
