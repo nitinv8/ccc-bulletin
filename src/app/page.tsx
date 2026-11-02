@@ -2,7 +2,7 @@ import HomeClient from "@/components/HomeClient";
 import { getSupabaseBulletins } from "@/lib/supabasePrograms";
 import { getBulletins } from "@/lib/programs";
 
-export const revalidate = 0; // always fresh from Supabase
+export const revalidate = 60;
 
 export default async function Home() {
   let bulletins = await getSupabaseBulletins();

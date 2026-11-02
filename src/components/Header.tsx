@@ -7,7 +7,6 @@ const navLinks = [
   { href: "/", label: "All Programs" },
   { href: "/starred", label: "★ Starred" },
   { href: "/about", label: "About" },
-  { href: "/admin", label: "Admin" },
 ];
 
 export default function Header() {
