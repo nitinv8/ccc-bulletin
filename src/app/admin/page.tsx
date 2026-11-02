@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Program, isExpired } from "@/lib/programs";
 import { slugify } from "@/lib/adminStore";
 import {
@@ -644,7 +644,6 @@ function NewBulletinModal({ onCancel, onCreate }: {
 // ─── program editor ───────────────────────────────────────────────────────────
 
 type EditorStep = "input" | "form";
-type InputMode = "text" | "image" | "manual";
 
 function SectionHeader({ title }: { title: string }) {
   return (
@@ -664,15 +663,11 @@ function ProgramEditor({ program, bulletinId, isNew, onCancel, onSave, onPreview
   onPreview: (p: Program) => void;
 }) {
   const [step, setStep] = useState<EditorStep>(isNew ? "input" : "form");
-  const [inputMode, setInputMode] = useState<InputMode>("text");
   const [pasteText, setPasteText] = useState("");
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState("");
   const [extracting, setExtracting] = useState(false);
   const [extractMsg, setExtractMsg] = useState("");
   const [form, setForm] = useState<Program>(program);
   const [uploading, setUploading] = useState<string | null>(null);
-  const imageInputRef = useRef<HTMLInputElement>(null);
 
   const set = <K extends keyof Program>(key: K, value: Program[K]) =>
     setForm((f) => ({ ...f, [key]: value }));
@@ -701,26 +696,14 @@ function ProgramEditor({ program, bulletinId, isNew, onCancel, onSave, onPreview
     setExtracting(true);
     setExtractMsg("");
     try {
-      let data: Record<string, unknown>;
-      if (inputMode === "text") {
-        const res = await fetch("/api/ai-extract-text", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text: pasteText }),
-        });
-        const body = await res.json();
-        if (!res.ok) throw new Error(body?.details || body?.error || `HTTP ${res.status}`);
-        data = body;
-      } else {
-        if (!imageFile) return;
-        const fd = new FormData();
-        fd.append("image", imageFile);
-        const res = await fetch("/api/ai-extract", { method: "POST", body: fd });
-        const body = await res.json();
-        if (!res.ok) throw new Error(body?.details || body?.error || `HTTP ${res.status}`);
-        data = body;
-      }
-      setForm((prev) => applyExtracted(data, prev));
+      const res = await fetch("/api/ai-extract-text", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: pasteText }),
+      });
+      const body = await res.json();
+      if (!res.ok) throw new Error(body?.details || body?.error || `HTTP ${res.status}`);
+      setForm((prev) => applyExtracted(body, prev));
       setStep("form");
       setExtractMsg("Fields filled — review and save.");
     } catch (e: unknown) {
@@ -755,7 +738,7 @@ function ProgramEditor({ program, bulletinId, isNew, onCancel, onSave, onPreview
     </label>
   );
 
-  const canProcess = inputMode === "text" ? pasteText.trim().length > 0 : imageFile !== null;
+  const canProcess = pasteText.trim().length > 0;
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
@@ -792,76 +775,17 @@ function ProgramEditor({ program, bulletinId, isNew, onCancel, onSave, onPreview
             <div className="flex flex-col items-center justify-center h-full gap-6 max-w-2xl mx-auto">
               <div>
                 <p className="text-center text-gray-500 text-sm mb-6">
-                  Paste event details or upload a poster — AI will fill in the form for you.
+                  Paste event details — AI will fill in the form for you.
                 </p>
 
-                {/* Mode toggle */}
-                <div className="flex rounded-xl border border-gray-200 overflow-hidden mb-5 w-fit mx-auto">
-                  <button
-                    onClick={() => setInputMode("text")}
-                    className={`px-6 py-2.5 text-sm font-medium transition-colors ${
-                      inputMode === "text" ? "bg-gray-900 text-white" : "text-gray-500 hover:bg-gray-50"
-                    }`}
-                  >
-                    ✏️ Paste text
-                  </button>
-                  <button
-                    onClick={() => setInputMode("image")}
-                    className={`px-6 py-2.5 text-sm font-medium transition-colors ${
-                      inputMode === "image" ? "bg-gray-900 text-white" : "text-gray-500 hover:bg-gray-50"
-                    }`}
-                  >
-                    🖼 Upload image
-                  </button>
-                </div>
-
-                {/* Text input */}
-                {inputMode === "text" && (
-                  <textarea
-                    value={pasteText}
-                    onChange={(e) => setPasteText(e.target.value)}
-                    placeholder="Paste any event information — email, brochure copy, website text, announcement…"
-                    rows={9}
-                    autoFocus
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 resize-none"
-                    style={{ minWidth: "520px" }}
-                  />
-                )}
-
-                {/* Image input */}
-                {inputMode === "image" && (
-                  <div
-                    onClick={() => imageInputRef.current?.click()}
-                    className={`w-full rounded-xl border-2 border-dashed cursor-pointer transition-colors flex flex-col items-center justify-center gap-3 ${
-                      imageFile ? "border-yellow-400 bg-yellow-50" : "border-gray-200 hover:border-gray-300 bg-gray-50"
-                    }`}
-                    style={{ minWidth: "520px", minHeight: "200px" }}
-                  >
-                    {imagePreview ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={imagePreview} alt="preview" className="max-h-48 rounded-lg object-contain" />
-                    ) : (
-                      <>
-                        <span className="text-3xl">🖼</span>
-                        <p className="text-sm text-gray-500">Click to choose an image</p>
-                        <p className="text-xs text-gray-400">PNG, JPG, WebP</p>
-                      </>
-                    )}
-                    {imageFile && (
-                      <p className="text-xs text-yellow-700 font-medium">{imageFile.name}</p>
-                    )}
-                  </div>
-                )}
-                <input
-                  ref={imageInputRef}
-                  type="file" accept="image/*" className="hidden"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      setImageFile(file);
-                      setImagePreview(URL.createObjectURL(file));
-                    }
-                  }}
+                <textarea
+                  value={pasteText}
+                  onChange={(e) => setPasteText(e.target.value)}
+                  placeholder="Paste any event information — email, brochure copy, website text, announcement…"
+                  rows={9}
+                  autoFocus
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 resize-none"
+                  style={{ minWidth: "520px" }}
                 />
 
                 {extractMsg && (
